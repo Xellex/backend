@@ -2,7 +2,7 @@ package com.example.backend;
 
 public class Person {
 	
-	private String firstName; 
+	public String firstName; 
 	private String lastName;
 	public String getFirstName() {
 		return firstName;

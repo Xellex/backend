@@ -20,8 +20,8 @@ public class Product {
 	private String beschrijving;
 	private int voorraad;
 	private String categorie;
-	private double kosten;
-	private double subtotal;
+	private float kosten;
+	private float subtotal;
 	private String afbeelding;
 	
 	// initialisering ............................
@@ -56,17 +56,17 @@ public class Product {
 	public void setCategorie(String categorie) {
 		this.categorie = categorie;
 	}
-	public double getKosten() {
+	public float getKosten() {
 		return kosten;
 	}
-	public void setKosten(double d) {
-		this.kosten = d;
+	public void setKosten(float kosten) {
+		this.kosten = kosten;
 	}
-	public double getSubtotal() {
+	public float getSubtotal() {
 		return subtotal;
 	}
-	public void setSubtotal(double d) {
-		this.subtotal = d;
+	public void setSubtotal(float subtotal) {
+		this.subtotal = subtotal;
 	}
 	public String getAfbeelding() {
 		return afbeelding;

@@ -1,5 +1,6 @@
 package com.example.backend;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,7 @@ public class Product {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column (nullable = false)
 	private int Id;
 	private String naam;
 	private String beschrijving;

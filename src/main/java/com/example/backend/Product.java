@@ -23,9 +23,16 @@ public class Product {
 	private double kosten;
 	private double subtotal;
 	private String afbeelding;
+	private boolean isOntvangen;
 	
 	// initialisering ............................
 	
+	public boolean isOntvangen() {
+		return isOntvangen;
+	}
+	public void setOntvangen(boolean isOntvangen) {
+		this.isOntvangen = isOntvangen;
+	}
 	public int getId() {
 		return Id;
 	}

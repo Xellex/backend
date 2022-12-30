@@ -3,12 +3,14 @@ package com.example.backend.dto;
 import java.util.List;
 
 public class ResponseDTO {
-	
+
 	private boolean succes;
-	
+
 	private List<String> validaties;
-	
-	
+
+	public ResponseDTO() {
+		super();
+	}
 
 	public ResponseDTO(boolean succes, List<String> validaties) {
 		super();
@@ -31,6 +33,5 @@ public class ResponseDTO {
 	public void setValidaties(List<String> validaties) {
 		this.validaties = validaties;
 	}
-	
 
 }

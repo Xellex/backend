@@ -24,18 +24,18 @@ public class Product {
 	private String beschrijving;
 	private int voorraad;
 	private String categorie;
+	@Column(columnDefinition="Decimal(10,2) default '0.00'")
 	private double kosten;
+	@Column(columnDefinition="Decimal(10,2) default '0.00'")
 	private double subtotal;
 	private String afbeelding;
 	private boolean isOntvangen;
 	
-	// initialisering ............................
+	// initialisering... ...............................
 	
 	public Product() {
 		
 	}
-	
-	
 	
 	public Product(int id, String naam, String beschrijving, int voorraad, String categorie, double kosten,
 			double subtotal, String afbeelding, boolean isOntvangen) {
@@ -119,8 +119,6 @@ public class Product {
 	public List<Recensie> getRecensies() {
 		return recensies;
 	}
-
-
 
 	public void setRecensies(List<Recensie> recensies) {
 		this.recensies = recensies;

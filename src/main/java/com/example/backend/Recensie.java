@@ -17,7 +17,5 @@ public class Recensie {
 	@ManyToOne
 	private Product product;
 	
-	
-	
 
 }

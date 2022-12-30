@@ -26,23 +26,37 @@ public class ProductController {
 	@RequestMapping(value = "product/aanmaken", method = RequestMethod.POST)
 	public ResponseDTO create(@RequestBody CreateProductDTO product) {
 
-		if (product.getNaam().equals("")) {
-			return new ResponseDTO(false, Arrays.asList("Naam is verplicht"));
-		}
-		
-		if (product.getBeschrijving().equals("")) {
-			return new ResponseDTO(false, Arrays.asList("Beschrijving is verplicht"));
-		}
-		
-		if (product.getCategorie().equals("")) {
-			return new ResponseDTO(false, Arrays.asList("Categorie is verplicht"));
-		}
-		
-		if (product.getKosten()<0) {
-			return new ResponseDTO(false, Arrays.asList("Kosten moet groter zijn dan 0"));
-		}
-		
 		ResponseDTO responseDTO = new ResponseDTO();
+		ArrayList<String> validaties = new ArrayList<>();
+
+		responseDTO.setSucces(true);
+
+		if (product.getNaam().equals("")) {
+			responseDTO.setSucces(false);
+			validaties.add("Naam is verplicht");
+
+		}
+
+		if (product.getBeschrijving().equals("")) {
+			responseDTO.setSucces(false);
+			validaties.add("Beschrijving is verplicht");
+		}
+
+		if (product.getCategorie().equals("")) {
+			responseDTO.setSucces(false);
+			validaties.add("Categorie is verplicht");
+		}
+
+		if (product.getKosten() < 0) {
+			responseDTO.setSucces(false);
+			validaties.add("Kosten moeten groter zijn dan 0");
+		}
+
+		responseDTO.setValidaties(validaties);
+		if (!responseDTO.isSucces()){
+			return responseDTO;
+		}
+		
 		Product opslaanProduct = new Product();
 
 		opslaanProduct.setNaam(product.getNaam());
@@ -53,13 +67,11 @@ public class ProductController {
 		opslaanProduct.setSubtotal(0);
 		opslaanProduct.setAfbeelding(null);
 		opslaanProduct.setOntvangen(false);
-		
-				
-		
+
 		repo.save(opslaanProduct);
 
-		return new ResponseDTO(true, null);
-			
+		return responseDTO;
+
 	}
 
 	@GetMapping

@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.Product;
 import com.example.backend.dto.CreateProductDTO;
 import com.example.backend.dto.ProductDto;
+import com.example.backend.dto.ResponseDTO;
 import com.example.backend.repo.IProductRepository;
 
 @RestController
@@ -22,20 +24,42 @@ public class ProductController {
 	private IProductRepository repo;
 
 	@RequestMapping(value = "product/aanmaken", method = RequestMethod.POST)
-	public void create(@RequestBody CreateProductDTO product) {
+	public ResponseDTO create(@RequestBody CreateProductDTO product) {
 
-		Product productopslaan = new Product(0, // id
-				product.getNaam(), // naam
-				product.getBeschrijving(), // beschrijving
-				0, // voorraad
-				product.getCategorie(), // categorie
-				0, // kosten
-				0, // subtotaal
-				null, // is ontvangen
-				false);
+		if (product.getNaam().equals("")) {
+			return new ResponseDTO(false, Arrays.asList("Naam is verplicht"));
+		}
+		
+		if (product.getBeschrijving().equals("")) {
+			return new ResponseDTO(false, Arrays.asList("Beschrijving is verplicht"));
+		}
+		
+		if (product.getCategorie().equals("")) {
+			return new ResponseDTO(false, Arrays.asList("Categorie is verplicht"));
+		}
+		
+		if (product.getKosten()<0) {
+			return new ResponseDTO(false, Arrays.asList("Kosten moet groter zijn dan 0"));
+		}
+		
+		ResponseDTO responseDTO = new ResponseDTO();
+		Product opslaanProduct = new Product();
 
-		repo.save(productopslaan);
+		opslaanProduct.setNaam(product.getNaam());
+		opslaanProduct.setBeschrijving(product.getBeschrijving());
+		opslaanProduct.setVoorraad(0);
+		opslaanProduct.setCategorie(product.getCategorie());
+		opslaanProduct.setKosten(product.getKosten());
+		opslaanProduct.setSubtotal(0);
+		opslaanProduct.setAfbeelding(null);
+		opslaanProduct.setOntvangen(false);
+		
+				
+		
+		repo.save(opslaanProduct);
 
+		return new ResponseDTO(true, null);
+			
 	}
 
 	@GetMapping

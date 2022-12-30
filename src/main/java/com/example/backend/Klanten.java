@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Klanten {
@@ -27,8 +28,15 @@ public class Klanten {
 	private String shippingInfo;
 	private float accountBalance;
 	private String bestelGeschiedenis;
+	
+	@OneToOne()
+	private Winkelwagen winkelwagen;
+	
+	
 	public int getKlantID() {
 		return klantID;
+	
+	
 	}
 	public void setKlantID(int klantID) {
 		this.klantID = klantID;

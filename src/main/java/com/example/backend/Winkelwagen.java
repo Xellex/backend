@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Winkelwagen {
@@ -16,6 +17,9 @@ public class Winkelwagen {
 	private long id;
 	
 	private int hoeveelheid;
+	
+	@OneToOne (mappedBy = "winkelwagen")
+	private Klanten klant;
 	
 	@Column(nullable = false)
 	private LocalDate aangemaakt;

@@ -19,6 +19,7 @@ public class EndpointProduct {
 		p.setKosten(4.99);
 		p.setSubtotal(6.99);
 		p.setVoorraad(100);
+		
 
 		product.add(p);
 		return product;

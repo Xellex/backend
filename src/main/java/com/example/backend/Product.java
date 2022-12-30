@@ -1,12 +1,16 @@
 package com.example.backend;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 
 @Entity
@@ -26,6 +30,29 @@ public class Product {
 	private boolean isOntvangen;
 	
 	// initialisering ............................
+	
+	public Product() {
+		
+	}
+	
+	
+	
+	public Product(int id, String naam, String beschrijving, int voorraad, String categorie, double kosten,
+			double subtotal, String afbeelding, boolean isOntvangen) {
+		super();
+		Id = id;
+		this.naam = naam;
+		this.beschrijving = beschrijving;
+		this.voorraad = voorraad;
+		this.categorie = categorie;
+		this.kosten = kosten;
+		this.subtotal = subtotal;
+		this.afbeelding = afbeelding;
+		this.isOntvangen = isOntvangen;
+
+		
+	
+	}
 	
 	public boolean isOntvangen() {
 		return isOntvangen;
@@ -82,6 +109,22 @@ public class Product {
 		this.afbeelding = afbeelding;
 	}
 	
+	
+	// relatie toevoegen 
+	// one kant
+	
+	@OneToMany(mappedBy = "product")
+	private List<Recensie> recensies;
+
+	public List<Recensie> getRecensies() {
+		return recensies;
+	}
+
+
+
+	public void setRecensies(List<Recensie> recensies) {
+		this.recensies = recensies;
+	}
 	
 	
 	

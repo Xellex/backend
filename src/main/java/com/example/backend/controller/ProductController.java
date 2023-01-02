@@ -56,7 +56,7 @@ public class ProductController {
 		if (!responseDTO.isSucces()){
 			return responseDTO;
 		}
-		
+	
 		Product opslaanProduct = new Product();
 
 		opslaanProduct.setNaam(product.getNaam());

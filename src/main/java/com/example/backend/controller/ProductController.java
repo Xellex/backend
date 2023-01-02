@@ -1,20 +1,20 @@
 package com.example.backend.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.Product;
 import com.example.backend.dto.CreateProductDTO;
 import com.example.backend.dto.ProductDto;
 import com.example.backend.dto.ResponseDTO;
+import com.example.backend.model.Product;
 import com.example.backend.repo.IProductRepository;
 
 @RestController
@@ -53,10 +53,10 @@ public class ProductController {
 		}
 
 		responseDTO.setValidaties(validaties);
-		if (!responseDTO.isSucces()){
+		if (!responseDTO.isSucces()) {
 			return responseDTO;
 		}
-	
+
 		Product opslaanProduct = new Product();
 
 		opslaanProduct.setNaam(product.getNaam());
@@ -74,13 +74,13 @@ public class ProductController {
 
 	}
 
-	@GetMapping
+	@GetMapping("producten")
 	public List<ProductDto> geefProductenWeer() {
 		// Uiteindelijke lijst
 		List<ProductDto> productenDtoLijst = new ArrayList();
 
 		// Lijst uit de database
-		List<Product> productenDB = new ArrayList<>();
+		List<Product> productenDB = repo.findAll();
 
 		for (Product product : productenDB) {
 			ProductDto productDto = new ProductDto();
@@ -92,5 +92,11 @@ public class ProductController {
 		}
 
 		return productenDtoLijst;
+
+	}
+
+	@GetMapping("product/{id}")
+	public Product productById(@PathVariable int id) {
+		return repo.findById(id).get();
 	}
 }

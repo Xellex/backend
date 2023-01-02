@@ -1,24 +1,26 @@
-package com.example.backend;
+package com.example.backend.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Klanten {
-	
+public class Klant {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int klantID;
-	
-	private String naam; 
+	private int id;
+
+	private String naam;
 	private String adres;
-	
+
 	@Column(nullable = false)
 	private LocalDate geboortedatum;
 	private String telefoonnummer;
@@ -28,18 +30,20 @@ public class Klanten {
 	private String shippingInfo;
 	private float accountBalance;
 	private String bestelGeschiedenis;
-	
-	@OneToOne()
+
+	@OneToOne
 	private Winkelwagen winkelwagen;
-	
-	
-	public int getKlantID() {
-		return klantID;
-	
-	
+	@OneToMany (mappedBy = "klant")
+	private List<Recensie> recensie;
+	@OneToMany (mappedBy = "klant")
+	private List<Bestelling> bestelling;
+	@OneToMany (mappedBy = "klant")
+	private List <VerlanglijstProduct> verlanglijstproduct;
+	public int getId() {
+		return id;
 	}
-	public void setKlantID(int klantID) {
-		this.klantID = klantID;
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getNaam() {
 		return naam;
@@ -101,8 +105,31 @@ public class Klanten {
 	public void setBestelGeschiedenis(String bestelGeschiedenis) {
 		this.bestelGeschiedenis = bestelGeschiedenis;
 	}
-	
-	
-	
+	public Winkelwagen getWinkelwagen() {
+		return winkelwagen;
+	}
+	public void setWinkelwagen(Winkelwagen winkelwagen) {
+		this.winkelwagen = winkelwagen;
+	}
+	public List<Recensie> getRecensie() {
+		return recensie;
+	}
+	public void setRecensie(List<Recensie> recensie) {
+		this.recensie = recensie;
+	}
+	public List<Bestelling> getBestelling() {
+		return bestelling;
+	}
+	public void setBestelling(List<Bestelling> bestelling) {
+		this.bestelling = bestelling;
+	}
+	public List<VerlanglijstProduct> getVerlanglijstproduct() {
+		return verlanglijstproduct;
+	}
+	public void setVerlanglijstproduct(List<VerlanglijstProduct> verlanglijstproduct) {
+		this.verlanglijstproduct = verlanglijstproduct;
+	}
 
+	
+	
 }

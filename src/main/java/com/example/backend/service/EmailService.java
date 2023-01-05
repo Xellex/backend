@@ -18,30 +18,12 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender emailSender;
 
-	public void sendSimpleMessage(String from, String to, String subject, String text) {
+	public void sendSimpleMessage(String to, String subject, String body) {
 		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom("info.Freddysfeestwinkel@gmail.com");
-		message.setTo("info.Freddysfeestwinkel@gmail.com");
+		message.setTo(to);
 		message.setSubject(subject);
-		message.setText(text);
+		message.setText(body);
 		
 		emailSender.send(message);
 	}
-
-	public void sendMessageWithAttachment(String from, String to, String subject, String text) throws MessagingException {
-		MimeMessage message = emailSender.createMimeMessage();
-
-		MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-		helper.setFrom(from);
-		helper.setTo(to);
-		helper.setSubject(subject);
-		helper.setText(text, true);
-
-		File attachmentFile = Paths.get("target/classes/sample.pdf").toFile();
-		helper.addAttachment("Sample 1.pdf", attachmentFile);
-
-		emailSender.send(message);
-	}
-
 }

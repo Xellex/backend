@@ -10,7 +10,7 @@ import com.example.backend.model.Klant;
 import com.example.backend.repo.IKlantenRepository;
 
 @RestController
-public class klantenController {
+public class KlantenController {
 
 	@Autowired
 	private IKlantenRepository repo;
@@ -18,9 +18,11 @@ public class klantenController {
 	@RequestMapping(value = "klanten/aanmaken", method = RequestMethod.POST)
 	public void create(@RequestBody Klant klanten) {
 		repo.save(klanten);
-		
 	}
-
 	
-	
+	// Registreren
+	@RequestMapping(value = "klant/registreren", method = RequestMethod.POST)
+	public void registreren(@RequestBody Klant klanten) {
+		repo.save(klanten);
+	}
 }

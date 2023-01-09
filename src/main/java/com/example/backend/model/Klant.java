@@ -31,7 +31,7 @@ public class Klant {
 	private float accountBalance;
 	private String bestelGeschiedenis;
 
-	@OneToOne
+	@OneToOne (mappedBy = "klant")
 	private Winkelwagen winkelwagen;
 	@OneToMany (mappedBy = "klant")
 	private List<Recensie> recensie;

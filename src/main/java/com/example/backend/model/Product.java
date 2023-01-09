@@ -1,46 +1,55 @@
-package com.example.backend;
+package com.example.backend.model;
 
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-
-import org.springframework.web.bind.annotation.GetMapping;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
 
 @Entity
 public class Product {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column (nullable = false)
-	private int Id;
+	@Column(nullable = false)
+	private int id;
 	private String naam;
 	private String beschrijving;
 	private int voorraad;
 	private String categorie;
-	@Column(columnDefinition="Decimal(10,2) default '0.00'")
+	@Column(columnDefinition = "Decimal(10,2) default '0.00'")
 	private double kosten;
-	@Column(columnDefinition="Decimal(10,2) default '0.00'")
+	@Column(columnDefinition = "Decimal(10,2) default '0.00'")
 	private double subtotal;
 	private String afbeelding;
-	private boolean isOntvangen;
+	private boolean ontvangen;
+
+	@ManyToOne
+	private Winkelier winkelier;
 	
+	@OneToMany (mappedBy = "product")
+	private List<VerlanglijstProduct> verlanglijstproducten;
+	@OneToMany (mappedBy = "product")
+	private List<Recensie> recensies;
+	@OneToMany (mappedBy = "product")
+	private List<WinkelwagenProduct> winkelwagenproduct;
+	@OneToMany (mappedBy = "product")
+	private List<BestellingProduct> bestellingproduct;
+
 	// initialisering... ...............................
-	
+
 	public Product() {
-		
+
 	}
-	
+
 	public Product(int id, String naam, String beschrijving, int voorraad, String categorie, double kosten,
 			double subtotal, String afbeelding, boolean isOntvangen) {
 		super();
-		Id = id;
+		this.id = id;
 		this.naam = naam;
 		this.beschrijving = beschrijving;
 		this.voorraad = voorraad;
@@ -48,73 +57,96 @@ public class Product {
 		this.kosten = kosten;
 		this.subtotal = subtotal;
 		this.afbeelding = afbeelding;
-		this.isOntvangen = isOntvangen;
+		this.ontvangen = isOntvangen;
+	}
 
-		
-	
-	}
-	
-	public boolean isOntvangen() {
-		return isOntvangen;
-	}
-	public void setOntvangen(boolean isOntvangen) {
-		this.isOntvangen = isOntvangen;
-	}
 	public int getId() {
-		return Id;
+		return id;
 	}
+
 	public void setId(int id) {
-		Id = id;
+		this.id = id;
 	}
+
 	public String getNaam() {
 		return naam;
 	}
+
 	public void setNaam(String naam) {
 		this.naam = naam;
 	}
+
 	public String getBeschrijving() {
 		return beschrijving;
 	}
+
 	public void setBeschrijving(String beschrijving) {
 		this.beschrijving = beschrijving;
 	}
+
 	public int getVoorraad() {
 		return voorraad;
 	}
+
 	public void setVoorraad(int voorraad) {
 		this.voorraad = voorraad;
 	}
+
 	public String getCategorie() {
 		return categorie;
 	}
+
 	public void setCategorie(String categorie) {
 		this.categorie = categorie;
 	}
+
 	public double getKosten() {
 		return kosten;
 	}
+
 	public void setKosten(double kosten) {
 		this.kosten = kosten;
 	}
+
 	public double getSubtotal() {
 		return subtotal;
 	}
-	public void setSubtotal(double d) {
-		this.subtotal = d;
+
+	public void setSubtotal(double subtotal) {
+		this.subtotal = subtotal;
 	}
+
 	public String getAfbeelding() {
 		return afbeelding;
 	}
+
 	public void setAfbeelding(String afbeelding) {
 		this.afbeelding = afbeelding;
 	}
-	
-	
-	// relatie toevoegen 
-	// one kant
-	
-	@OneToMany(mappedBy = "product")
-	private List<Recensie> recensies;
+
+	public boolean isOntvangen() {
+		return ontvangen;
+	}
+
+	public void setOntvangen(boolean ontvangen) {
+		this.ontvangen = ontvangen;
+	}
+
+	public Winkelier getWinkelier() {
+		return winkelier;
+	}
+
+	public void setWinkelier(Winkelier winkelier) {
+		this.winkelier = winkelier;
+	}
+
+	public List<VerlanglijstProduct> getVerlanglijstproducten() {
+		return verlanglijstproducten;
+	}
+
+	public void setVerlanglijstproducten(List<VerlanglijstProduct> verlanglijstproducten) {
+		this.verlanglijstproducten = verlanglijstproducten;
+	}
 
 	public List<Recensie> getRecensies() {
 		return recensies;
@@ -123,10 +155,22 @@ public class Product {
 	public void setRecensies(List<Recensie> recensies) {
 		this.recensies = recensies;
 	}
-	
-	
-	
+
+	public List<WinkelwagenProduct> getWinkelwagenproduct() {
+		return winkelwagenproduct;
+	}
+
+	public void setWinkelwagenproduct(List<WinkelwagenProduct> winkelwagenproduct) {
+		this.winkelwagenproduct = winkelwagenproduct;
+	}
+
+	public List<BestellingProduct> getBestellingproduct() {
+		return bestellingproduct;
+	}
+
+	public void setBestellingproduct(List<BestellingProduct> bestellingproduct) {
+		this.bestellingproduct = bestellingproduct;
+	}
 
 	
-
 }

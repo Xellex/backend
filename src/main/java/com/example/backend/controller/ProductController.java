@@ -87,6 +87,8 @@ public class ProductController {
 			productDto.setId(product.getId());
 			productDto.setNaam(product.getNaam());
 			productDto.setOmschrijving(product.getBeschrijving());
+			productDto.setCategorie(product.getCategorie());
+			productDto.setSubtotal(product.getSubtotal());
 
 			productenDtoLijst.add(productDto);
 		}

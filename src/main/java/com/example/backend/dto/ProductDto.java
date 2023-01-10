@@ -5,7 +5,21 @@ public class ProductDto {
 	private int id;
 	private String naam;
 	private String omschrijving;
+	private double subtotal;
+	private String categorie;
 	
+	public double getSubtotal() {
+		return subtotal;
+	}
+	public void setSubtotal(double subtotal) {
+		this.subtotal = subtotal;
+	}
+	public String getCategorie() {
+		return categorie;
+	}
+	public void setCategorie(String categorie) {
+		this.categorie = categorie;
+	}
 	public int getId() {
 		return id;
 	}

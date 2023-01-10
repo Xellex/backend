@@ -39,7 +39,7 @@ public class WinkelwagenController {
 		// check of winkelwagen aanwezig is voor de huidige user
 		// als die nog niet bestaat, dan aanmaken
 		// dan product toevoegen
-		Klant klant = klantrepo.findById(1).get();
+		Klant klant = klantrepo.findById( 1).get();
 		if (klant.getWinkelwagen() == null) {
 
 			Winkelwagen winkelwagen = new Winkelwagen();

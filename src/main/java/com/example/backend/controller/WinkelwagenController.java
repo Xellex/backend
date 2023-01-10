@@ -16,10 +16,9 @@ public class WinkelwagenController {
 	@Autowired
 	private IWinkelwagenRepository repo;
 
-	@RequestMapping(value = "winkelwagen/aanmaken", method = RequestMethod.POST)
-	public void create(@RequestBody WinkelwagenProduct winkelwagen) {
-		repo.save(winkelwagen);
-
+	@RequestMapping(value = "winkelwagen/product", method = RequestMethod.POST)
+	public int create(@RequestBody WinkelwagenProduct winkelwagen) {
+	return 2;
 	}
 
 	@RequestMapping(value = "winkelwagen/{id}", method = RequestMethod.PUT)

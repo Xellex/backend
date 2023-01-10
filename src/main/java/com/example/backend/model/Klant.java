@@ -24,7 +24,9 @@ public class Klant {
 	@Column(nullable = false)
 	private LocalDate geboortedatum;
 	private String telefoonnummer;
+	@Column (nullable = false)
 	private String email;
+	@Column (nullable = false)
 	private String password;
 	private String CCinfo;
 	private String shippingInfo;

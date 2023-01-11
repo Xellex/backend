@@ -2,7 +2,6 @@ package com.example.backend.model;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,118 +17,167 @@ public class Klant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Column(nullable = true)
 	private String naam;
+
+	@Column(nullable = true)
 	private String adres;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private LocalDate geboortedatum;
+
+	@Column(nullable = true)
 	private String telefoonnummer;
+
+	@Column(nullable = false)
 	private String email;
+
+	@Column(nullable = false)
 	private String password;
+
+	@Column(nullable = true)
 	private String CCinfo;
+
+	@Column(nullable = true)
 	private String shippingInfo;
+
+	@Column(nullable = true)
 	private float accountBalance;
+
+	@Column(nullable = true)
 	private String bestelGeschiedenis;
 
-	@OneToOne
+	// Relaties
+	@OneToOne (mappedBy = "klant")
 	private Winkelwagen winkelwagen;
-	@OneToMany (mappedBy = "klant")
+
+	@OneToMany(mappedBy = "klant")
 	private List<Recensie> recensie;
-	@OneToMany (mappedBy = "klant")
+
+	@OneToMany(mappedBy = "klant")
 	private List<Bestelling> bestelling;
-	@OneToMany (mappedBy = "klant")
-	private List <VerlanglijstProduct> verlanglijstproduct;
+
+	@OneToMany(mappedBy = "klant")
+	private List<VerlanglijstProduct> verlanglijstproduct;
+
+	// Getters & Setters
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getNaam() {
 		return naam;
 	}
+
 	public void setNaam(String naam) {
 		this.naam = naam;
 	}
+
 	public String getAdres() {
 		return adres;
 	}
+
 	public void setAdres(String adres) {
 		this.adres = adres;
 	}
+
 	public LocalDate getGeboortedatum() {
 		return geboortedatum;
 	}
+
 	public void setGeboortedatum(LocalDate geboortedatum) {
 		this.geboortedatum = geboortedatum;
 	}
+
 	public String getTelefoonnummer() {
 		return telefoonnummer;
 	}
+
 	public void setTelefoonnummer(String telefoonnummer) {
 		this.telefoonnummer = telefoonnummer;
 	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	public String getCCinfo() {
 		return CCinfo;
 	}
+
 	public void setCCinfo(String cCinfo) {
 		CCinfo = cCinfo;
 	}
+
 	public String getShippingInfo() {
 		return shippingInfo;
 	}
+
 	public void setShippingInfo(String shippingInfo) {
 		this.shippingInfo = shippingInfo;
 	}
+
 	public float getAccountBalance() {
 		return accountBalance;
 	}
+
 	public void setAccountBalance(float accountBalance) {
 		this.accountBalance = accountBalance;
 	}
+
 	public String getBestelGeschiedenis() {
 		return bestelGeschiedenis;
 	}
+
 	public void setBestelGeschiedenis(String bestelGeschiedenis) {
 		this.bestelGeschiedenis = bestelGeschiedenis;
 	}
+
 	public Winkelwagen getWinkelwagen() {
 		return winkelwagen;
 	}
+
 	public void setWinkelwagen(Winkelwagen winkelwagen) {
 		this.winkelwagen = winkelwagen;
 	}
+
 	public List<Recensie> getRecensie() {
 		return recensie;
 	}
+
 	public void setRecensie(List<Recensie> recensie) {
 		this.recensie = recensie;
 	}
+
 	public List<Bestelling> getBestelling() {
 		return bestelling;
 	}
+
 	public void setBestelling(List<Bestelling> bestelling) {
 		this.bestelling = bestelling;
 	}
+
 	public List<VerlanglijstProduct> getVerlanglijstproduct() {
 		return verlanglijstproduct;
 	}
+
 	public void setVerlanglijstproduct(List<VerlanglijstProduct> verlanglijstproduct) {
 		this.verlanglijstproduct = verlanglijstproduct;
 	}
-
-	
-	
 }

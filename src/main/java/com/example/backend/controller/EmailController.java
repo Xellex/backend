@@ -16,7 +16,7 @@ import com.example.backend.service.EmailService;
 
 @RestController
 public class EmailController {
-	
+
 	public static String mijnEmail = "info.freddyfeestwinkel@gmail.com";
 
 	@Autowired

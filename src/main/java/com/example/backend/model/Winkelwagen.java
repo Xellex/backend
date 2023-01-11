@@ -21,7 +21,7 @@ public class Winkelwagen {
 	@OneToMany(mappedBy = "winkelwagen")
 	private List<WinkelwagenProduct> winkelwagenproducten;
 
-	@OneToOne(mappedBy = "winkelwagen")
+	@OneToOne
 	private Klant klant;
 
 	public long getId() {

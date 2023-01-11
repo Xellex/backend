@@ -13,7 +13,7 @@ import com.example.backend.model.Klant;
 import com.example.backend.repo.IKlantenRepository;
 
 @RestController
-public class klantenController {
+public class KlantenController {
 
 	@Autowired
 	private IKlantenRepository repo;
@@ -21,10 +21,13 @@ public class klantenController {
 	@RequestMapping(value = "klanten/aanmaken", method = RequestMethod.POST)
 	public void create(@RequestBody Klant klanten) {
 		repo.save(klanten);
-
 	}
 	
-
+	// Registreren
+	@RequestMapping(value = "klant/registreren", method = RequestMethod.POST)
+	public void registreren(@RequestBody Klant klanten) {
+		repo.save(klanten);
+	}
 
 //		Klant storedUserDetails = repo.findByEmail(Klant.getEmail());
 //		if(storedUserDetails != null) throw new RuntimeException("Record already exists");
@@ -33,7 +36,6 @@ public class klantenController {
 	public Klant klantById(@PathVariable int id) {
 		Klant klant = repo.findById(id).get();
 		return klant;
-
 	}
 	
 //	public boolean exist (String email){
@@ -64,5 +66,3 @@ public class klantenController {
 //	        boolean exists = IKlantenRepository.existsByNaam(naam);
 //	        return ResponseEntity.ok(exists);
 //	    }
-
-

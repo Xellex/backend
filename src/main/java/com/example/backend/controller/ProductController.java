@@ -77,7 +77,7 @@ public class ProductController {
 	@GetMapping("producten")
 	public List<ProductDto> geefProductenWeer() {
 		// Uiteindelijke lijst
-		List<ProductDto> productenDtoLijst = new ArrayList();
+		List<ProductDto> productenDtoLijst = new ArrayList<>();
 
 		// Lijst uit de database
 		List<Product> productenDB = repo.findAll();
@@ -87,6 +87,8 @@ public class ProductController {
 			productDto.setId(product.getId());
 			productDto.setNaam(product.getNaam());
 			productDto.setOmschrijving(product.getBeschrijving());
+			productDto.setCategorie(product.getCategorie());
+			productDto.setSubtotal(product.getSubtotal());
 
 			productenDtoLijst.add(productDto);
 		}
@@ -99,4 +101,7 @@ public class ProductController {
 	public Product productById(@PathVariable int id) {
 		return repo.findById(id).get();
 	}
-}
+
+
+	}
+//

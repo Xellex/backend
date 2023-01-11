@@ -34,7 +34,6 @@ public class ProductController {
 		if (product.getNaam().equals("")) {
 			responseDTO.setSucces(false);
 			validaties.add("Naam is verplicht");
-
 		}
 
 		if (product.getBeschrijving().equals("")) {
@@ -52,6 +51,11 @@ public class ProductController {
 			validaties.add("Kosten moeten groter zijn dan 0");
 		}
 
+		if (product.getSubtotal() < 0) {
+			responseDTO.setSucces(false);
+			validaties.add("Subtotal moeten groter zijn dan 0");
+		}
+
 		responseDTO.setValidaties(validaties);
 		if (!responseDTO.isSucces()) {
 			return responseDTO;
@@ -61,17 +65,16 @@ public class ProductController {
 
 		opslaanProduct.setNaam(product.getNaam());
 		opslaanProduct.setBeschrijving(product.getBeschrijving());
-		opslaanProduct.setVoorraad(0);
+		opslaanProduct.setVoorraad(product.getVoorraad());
 		opslaanProduct.setCategorie(product.getCategorie());
 		opslaanProduct.setKosten(product.getKosten());
-		opslaanProduct.setSubtotal(0);
+		opslaanProduct.setSubtotal(product.getSubtotal());
 		opslaanProduct.setAfbeelding(null);
 		opslaanProduct.setOntvangen(false);
 
 		repo.save(opslaanProduct);
 
 		return responseDTO;
-
 	}
 
 	@GetMapping("producten")
@@ -87,12 +90,16 @@ public class ProductController {
 			productDto.setId(product.getId());
 			productDto.setNaam(product.getNaam());
 			productDto.setOmschrijving(product.getBeschrijving());
+			productDto.setVoorraad(product.getVoorraad());
+			productDto.setCategorie(product.getCategorie());
+			productDto.setKosten(product.getKosten());
+			productDto.setSubtotal(product.getSubtotal());
+			productDto.setAfbeelding(product.getAfbeelding());
 
 			productenDtoLijst.add(productDto);
 		}
 
 		return productenDtoLijst;
-
 	}
 
 	@GetMapping("product/{id}")

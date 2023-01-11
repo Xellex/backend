@@ -48,7 +48,7 @@ public class Klant {
 	private String bestelGeschiedenis;
 
 	// Relaties
-	@OneToOne
+	@OneToOne (mappedBy = "klant")
 	private Winkelwagen winkelwagen;
 
 	@OneToMany(mappedBy = "klant")

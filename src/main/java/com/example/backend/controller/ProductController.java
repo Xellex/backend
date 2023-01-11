@@ -80,7 +80,7 @@ public class ProductController {
 	@GetMapping("producten")
 	public List<ProductDto> geefProductenWeer() {
 		// Uiteindelijke lijst
-		List<ProductDto> productenDtoLijst = new ArrayList();
+		List<ProductDto> productenDtoLijst = new ArrayList<>();
 
 		// Lijst uit de database
 		List<Product> productenDB = repo.findAll();
@@ -106,4 +106,7 @@ public class ProductController {
 	public Product productById(@PathVariable int id) {
 		return repo.findById(id).get();
 	}
-}
+
+
+	}
+//

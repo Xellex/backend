@@ -45,7 +45,7 @@ public class klantenController {
         else
             return false;
     }
-
+//http://localhost:8080/klanten/email/test@dfsdfsa.com
     @GetMapping("/check-password")
     public boolean checkPassword(@RequestParam("password") String password) {
         Klant klant = repo.findByPassword(password);
@@ -56,6 +56,9 @@ public class klantenController {
         }
     }
 }
+
+//http://localhost:8080/check-password?password=yourpassword
+
 
 //	    @GetMapping("/exists/{username}")
 //	    public ResponseEntity<Boolean> checkNaamEntity(@PathVariable("naam") String naam) {

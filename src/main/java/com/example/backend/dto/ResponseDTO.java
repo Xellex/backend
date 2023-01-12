@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ResponseDTO {
 
-	private boolean succes = false;
+	private boolean succes;
 
 	private List<String> validaties;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import com.example.backend.dto.ResponseDTO;
 import com.example.backend.model.Product;
 import com.example.backend.repo.IProductRepository;
 
+@CrossOrigin (maxAge = 3600)
 @RestController
 public class ProductController {
 
@@ -34,6 +36,7 @@ public class ProductController {
 		if (product.getNaam().equals("")) {
 			responseDTO.setSucces(false);
 			validaties.add("Naam is verplicht");
+
 		}
 
 		if (product.getBeschrijving().equals("")) {
@@ -51,11 +54,6 @@ public class ProductController {
 			validaties.add("Kosten moeten groter zijn dan 0");
 		}
 
-		if (product.getSubtotal() < 0) {
-			responseDTO.setSucces(false);
-			validaties.add("Subtotal moeten groter zijn dan 0");
-		}
-
 		responseDTO.setValidaties(validaties);
 		if (!responseDTO.isSucces()) {
 			return responseDTO;
@@ -65,16 +63,17 @@ public class ProductController {
 
 		opslaanProduct.setNaam(product.getNaam());
 		opslaanProduct.setBeschrijving(product.getBeschrijving());
-		opslaanProduct.setVoorraad(product.getVoorraad());
+		opslaanProduct.setVoorraad(0);
 		opslaanProduct.setCategorie(product.getCategorie());
 		opslaanProduct.setKosten(product.getKosten());
-		opslaanProduct.setSubtotal(product.getSubtotal());
+		opslaanProduct.setSubtotal(0);
 		opslaanProduct.setAfbeelding(null);
 		opslaanProduct.setOntvangen(false);
 
 		repo.save(opslaanProduct);
 
 		return responseDTO;
+
 	}
 
 	@GetMapping("producten")
@@ -90,16 +89,14 @@ public class ProductController {
 			productDto.setId(product.getId());
 			productDto.setNaam(product.getNaam());
 			productDto.setOmschrijving(product.getBeschrijving());
-			productDto.setVoorraad(product.getVoorraad());
 			productDto.setCategorie(product.getCategorie());
-			productDto.setKosten(product.getKosten());
 			productDto.setSubtotal(product.getSubtotal());
-			productDto.setAfbeelding(product.getAfbeelding());
 
 			productenDtoLijst.add(productDto);
 		}
 
 		return productenDtoLijst;
+
 	}
 
 	@GetMapping("product/{id}")

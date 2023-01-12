@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.model.Klant;
 import com.example.backend.repo.IKlantenRepository;
 
+@CrossOrigin (maxAge = 3600)
 @RestController
-public class KlantenController {
+public class klantenController {
 
 	@Autowired
 	private IKlantenRepository repo;
@@ -21,12 +23,7 @@ public class KlantenController {
 	@RequestMapping(value = "klanten/aanmaken", method = RequestMethod.POST)
 	public void create(@RequestBody Klant klanten) {
 		repo.save(klanten);
-	}
-	
-	// Registreren
-	@RequestMapping(value = "klant/registreren", method = RequestMethod.POST)
-	public void registreren(@RequestBody Klant klanten) {
-		repo.save(klanten);
+
 	}
 
 //		Klant storedUserDetails = repo.findByEmail(Klant.getEmail());
@@ -36,6 +33,7 @@ public class KlantenController {
 	public Klant klantById(@PathVariable int id) {
 		Klant klant = repo.findById(id).get();
 		return klant;
+
 	}
 
 //	}
@@ -46,7 +44,7 @@ public class KlantenController {
 		else
 			return false;
 	}
-	//http://localhost:8080/check-password?password=yourpassword
+
 //http://localhost:8080/klanten/email/test@dfsdfsa.com
 	@GetMapping("/check-password")
 	public boolean checkPassword(@RequestParam("password") String password) {
@@ -59,3 +57,4 @@ public class KlantenController {
 	}
 }
 
+//http://localhost:8080/check-password?password=yourpassword

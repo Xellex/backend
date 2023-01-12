@@ -24,44 +24,39 @@ public class EmailController {
 
 	@PostMapping("/email/send")
 	public ResponseDTO send(@RequestBody Email email) {
-	    ResponseDTO responseDTO = new ResponseDTO();
+		ResponseDTO responseDTO = new ResponseDTO();
 
-	    ArrayList<String> validaties = new ArrayList<>();
+		ArrayList<String> validaties = new ArrayList<>();
 
-	    try {
-	    	// adding phone to the message body
-	    	emailService.sendSimpleMessage(mijnEmail, email.getSubject(), 
-	    	email.getMessage() + " telefoonnummer klant:" + email.getPhone());
-	        responseDTO.setSucces(true);
-	    } catch (Exception e) {
-	        // add the exception message to the list
-	        validaties.add(e.getMessage());
-	        responseDTO.setSucces(false);
-	        
-	        // check if there are any additional messages
-	        if (e.getCause() instanceof MessagingException) {
-	            MessagingException me = (MessagingException) e.getCause();
-	            validaties.add(me.getMessage());
-	        }
-	        if (e.getCause() instanceof AddressException) {
-	            AddressException ae = (AddressException) e.getCause();
-	            validaties.add(ae.getMessage());
-	        }
-	        // add the list of validation messages to the response DTO
-	        responseDTO.setValidaties(validaties);
-	    }
-	    
-	    //send confirmation email back
-	    String subject = new String();
-	    String message = new String();
-	    message = email.getFirstname()+ " " + email.getLastname() + ",\nBedankt voor uw bericht."
-	    		+ " Wij hebben uw bericht in goede orde ontvangen."
-	    		+ " Wij proberen zo spoedig mogelijk ue bericht te beantworden."
-	    		+ "\nUw bericht: \n" + email.getMessage();
-	    subject = "RE/" + email.getSubject();
-	    
-	    emailService.sendSimpleMessage(email.getTo(), subject, message);
-	    
-	    return responseDTO;
+		try {
+			emailService.sendSimpleMessage(mijnEmail, email.getSubject(), email.getMessage());
+			responseDTO.setSucces(true);
+		} catch (Exception e) {
+			// add the exception message to the list
+			validaties.add(e.getMessage());
+
+			// check if there are any additional messages
+			if (e.getCause() instanceof MessagingException) {
+				MessagingException me = (MessagingException) e.getCause();
+				validaties.add(me.getMessage());
+			}
+			if (e.getCause() instanceof AddressException) {
+				AddressException ae = (AddressException) e.getCause();
+				validaties.add(ae.getMessage());
+			}
+			// add the list of validation messages to the response DTO
+			responseDTO.setValidaties(validaties);
+		}
+
+		// send confirmation email back
+		String subject = new String();
+		String message = new String();
+		message = email.getName() + ",\nBedankt voor uw bericht." + " Wij hebben uw bericht in goede orde ontvangen."
+				+ " Wij proberen uw zo spoedig mogelijk te beantwoorden." + "\nUw bericht: \n" + email.getMessage();
+		subject = "RE/" + email.getSubject();
+
+		emailService.sendSimpleMessage(email.getTo(), subject, message);
+
+		return responseDTO;
 	}
 }

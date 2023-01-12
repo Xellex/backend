@@ -1,6 +1,9 @@
 package com.example.backend.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.ResponseDTO;
 import com.example.backend.model.Klant;
 import com.example.backend.repo.IKlantenRepository;
 
 @RestController
+@CrossOrigin(maxAge = 3600)
 public class KlantenController {
 
 	@Autowired
@@ -43,7 +48,22 @@ public class KlantenController {
 //		
 //	}
 	@GetMapping("klanten/email/{email}")
-    public boolean checkEmailExists(@PathVariable("email") String email) {
+    public ResponseDTO checkEmailExists(@PathVariable("email") String email) {
+		Optional<Klant> klantOptional = repo.findByEmailAndPassword(email, password);
+		if (klantOptional.isPresent()) {
+			Klant klant = klantOptional.get();
+			klant.setToken(RANDOMSTRING);
+			repo.save(klant);
+			
+			return new ResponseDTO();
+			
+//			{
+//				"token": "TOKEN",
+//				"name": klant.getUsername(),
+//				"role": "ROLE_KLANT"
+//			}
+		}
+		
         if(repo.existsByEmail(email))
             return true;
         else

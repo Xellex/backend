@@ -2,11 +2,13 @@ package com.example.backend.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,16 +17,27 @@ import com.example.backend.dto.CreateProductDTO;
 import com.example.backend.dto.ProductDto;
 import com.example.backend.dto.ResponseDTO;
 import com.example.backend.model.Product;
+import com.example.backend.repo.IKlantenRepository;
 import com.example.backend.repo.IProductRepository;
+import com.example.backend.repo.IWinkelwagenRepository;
 
 @RestController
 public class ProductController {
 
 	@Autowired
 	private IProductRepository repo;
+	
+	@Autowired
+	private IKlantenRepository klantReo;
 
 	@RequestMapping(value = "product/aanmaken", method = RequestMethod.POST)
-	public ResponseDTO create(@RequestBody CreateProductDTO product) {
+	public ResponseDTO create(@RequestBody CreateProductDTO product, @RequestHeader("Token") String token) {
+		
+		// Is er een winkelier met die token
+		Optional<Winkelier> winkelierOptional = klantReo.findByToken(token);
+		
+		
+		
 
 		ResponseDTO responseDTO = new ResponseDTO();
 		ArrayList<String> validaties = new ArrayList<>();
@@ -71,6 +84,7 @@ public class ProductController {
 		opslaanProduct.setSubtotal(product.getSubtotal());
 		opslaanProduct.setAfbeelding(null);
 		opslaanProduct.setOntvangen(false);
+		opslaanProduct.setWinkelier(ingelodWinkelier);
 
 		repo.save(opslaanProduct);
 

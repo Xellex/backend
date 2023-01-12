@@ -15,29 +15,43 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false)
 	private int id;
+
+	@Column(nullable = false)
 	private String naam;
+
+	@Column(nullable = false)
 	private String beschrijving;
+
+	@Column(nullable = false)
 	private int voorraad;
+
+	@Column(nullable = false)
 	private String categorie;
+
 	@Column(columnDefinition = "Decimal(10,2) default '0.00'")
 	private double kosten;
+
 	@Column(columnDefinition = "Decimal(10,2) default '0.00'")
 	private double subtotal;
+
+	@Column(nullable = true)
 	private String afbeelding;
+
+	@Column(nullable = true)
 	private boolean ontvangen;
 
+	// Relaties
 	@ManyToOne
 	private Winkelier winkelier;
-	
-	@OneToMany (mappedBy = "product")
+
+	@OneToMany(mappedBy = "product")
 	private List<VerlanglijstProduct> verlanglijstproducten;
-	@OneToMany (mappedBy = "product")
+	@OneToMany(mappedBy = "product")
 	private List<Recensie> recensies;
-	@OneToMany (mappedBy = "product")
+	@OneToMany(mappedBy = "product")
 	private List<WinkelwagenProduct> winkelwagenproduct;
-	@OneToMany (mappedBy = "product")
+	@OneToMany(mappedBy = "product")
 	private List<BestellingProduct> bestellingproduct;
 
 	// initialisering... ...............................
@@ -172,5 +186,4 @@ public class Product {
 		this.bestellingproduct = bestellingproduct;
 	}
 
-	
 }

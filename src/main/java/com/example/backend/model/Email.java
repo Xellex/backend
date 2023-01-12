@@ -1,25 +1,37 @@
 package com.example.backend.model;
 
 public class Email {
+	
+	private String firstname;
+	private String lastname;
+    private String to;
+    private String phone;
+    private String subject;
+    private String message;
 
-	private String name;
-	private String to;
-	private String subject;
-	private String message;
-
-	public Email(String name, String to, String subject, String message) {
-		this.name = name;
+	public Email(String firstname, String lastname, String to, String phone, String subject, String message) {
+		this.firstname = firstname;
+		this.lastname = lastname;
 		this.to = to;
+		this.phone = phone;
 		this.subject = subject;
 		this.message = message;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstname() {
+		return firstname;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
 
 	public String getTo() {
@@ -28,6 +40,14 @@ public class Email {
 
 	public void setTo(String to) {
 		this.to = to;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getSubject() {
@@ -45,4 +65,5 @@ public class Email {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+    
 }

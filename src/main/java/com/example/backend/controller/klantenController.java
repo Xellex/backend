@@ -33,37 +33,26 @@ public class klantenController {
 		return klant;
 
 	}
-	
-//	public boolean exist (String email){
-//		return repo.existByEmail(email);
-//		
+
 //	}
 	@GetMapping("klanten/email/{email}")
-    public boolean checkEmailExists(@PathVariable("email") String email) {
-        if(repo.existsByEmail(email))
-            return true;
-        else
-            return false;
-    }
+	public boolean checkEmailExists(@PathVariable("email") String email) {
+		if (repo.existsByEmail(email))
+			return true;
+		else
+			return false;
+	}
+
 //http://localhost:8080/klanten/email/test@dfsdfsa.com
-    @GetMapping("/check-password")
-    public boolean checkPassword(@RequestParam("password") String password) {
-        Klant klant = repo.findByPassword(password);
-        if (klant != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+	@GetMapping("/check-password")
+	public boolean checkPassword(@RequestParam("password") String password) {
+		Klant klant = repo.findByPassword(password);
+		if (klant != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 //http://localhost:8080/check-password?password=yourpassword
-
-
-//	    @GetMapping("/exists/{username}")
-//	    public ResponseEntity<Boolean> checkNaamEntity(@PathVariable("naam") String naam) {
-//	        boolean exists = IKlantenRepository.existsByNaam(naam);
-//	        return ResponseEntity.ok(exists);
-//	    }
-
-

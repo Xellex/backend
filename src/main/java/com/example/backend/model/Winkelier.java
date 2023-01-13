@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Winkelier {
@@ -26,6 +27,15 @@ public class Winkelier {
 	@Column(length = 100, nullable = false)
 	private String email;
 	
+	@OneToOne(mappedBy = "winkelier")
+	private Token token;
+	
+	public Token getToken() {
+		return token;
+	}
+	public void setToken(Token token) {
+		this.token = token;
+	}
 	public long getId() {
 		return id;
 	}

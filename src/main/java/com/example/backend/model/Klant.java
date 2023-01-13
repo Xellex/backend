@@ -48,6 +48,9 @@ public class Klant {
 	private String bestelGeschiedenis;
 
 	// Relaties
+	@OneToOne(mappedBy = "klant")
+	private Token token;
+	
 	@OneToOne (mappedBy = "klant")
 	private Winkelwagen winkelwagen;
 
@@ -179,5 +182,13 @@ public class Klant {
 
 	public void setVerlanglijstproduct(List<VerlanglijstProduct> verlanglijstproduct) {
 		this.verlanglijstproduct = verlanglijstproduct;
+	}
+
+	public void setToken(Token token) {
+		this.token = token;	
+	}
+	
+	public Token getToken() {
+		return token;
 	}
 }

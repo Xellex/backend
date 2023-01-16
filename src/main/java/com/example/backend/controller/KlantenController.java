@@ -61,9 +61,23 @@ public class KlantenController {
 	}
 
 	@GetMapping("klanten/id/{id}")
-	public Klant klantById(@PathVariable int id) {
-		Klant klant = klantRepo.findById(id).get();
-		return klant;
+	public boolean klantById(@PathVariable int id, @RequestHeader("Authentication") String authenticationToken) {
+		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
+		if(rights) {
+			Klant klant = klantRepo.findById(id).get();
+			return true;
+		}
+		return false;
+	}
+	
+	@GetMapping("klanten/all")
+	public List<Klant> klantById(@RequestHeader("Authentication") String authenticationToken) {
+		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
+		if(rights) {
+			
+			return klantRepo.findAll();
+		}
+		return null;
 	}
 
 	@GetMapping("klanten/inloggen")

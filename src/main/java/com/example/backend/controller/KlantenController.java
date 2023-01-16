@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.dto.KlantDTO;
 import com.example.backend.dto.LocalStorageDTO;
 import com.example.backend.dto.LoginResponseDTO;
+import com.example.backend.dto.ResponseDTO;
 import com.example.backend.model.Klant;
 import com.example.backend.model.Token;
 import com.example.backend.model.Winkelier;
 import com.example.backend.repo.IKlantenRepository;
 import com.example.backend.repo.ITokenRepository;
 import com.example.backend.repo.IWinkelierRepository;
+import com.example.backend.service.AuthenticationService;
 
 @RestController
 public class KlantenController {
@@ -37,17 +39,20 @@ public class KlantenController {
 
 	@Autowired
 	private ITokenRepository tokenRepo;
+	
+	@Autowired
+	private AuthenticationService authService;
 
 	@RequestMapping(value = "klanten/aanmaken", method = RequestMethod.POST)
-	public String create(@RequestBody Klant klant ,@RequestHeader("Authentication") String token) {
-		try {
-			
-			return "goed";
-		} catch (Exception e) {
+	public ResponseDTO create(@RequestBody Klant klant, @RequestHeader("Authentication") String authenticationToken) {
+		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
 
-			System.out.println(e.toString());
-			return e.toString();
-		}
+		if (rights) {
+			klantRepo.save(klant);
+
+			return new ResponseDTO(true);
+		} else 
+			return new ResponseDTO(false, "Je hebt geen rechten");
 	}
 
 	@RequestMapping(value = "klant/registreren", method = RequestMethod.POST)

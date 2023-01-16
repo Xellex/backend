@@ -69,9 +69,9 @@ public class Token {
 		this.randomstring = new String(text);
 	}
 
-//	public boolean isExpired() {
-//		return System.currentTimeMillis() - creationTime > expirationTime;
-//	}
+	public boolean isExpired() {
+		return System.currentTimeMillis() > creationTime + (60 * 60 * 2 * 1000);
+	}
 
 	public String getRandomstring() {
 		return randomstring;

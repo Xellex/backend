@@ -4,7 +4,7 @@ import javax.persistence.Column;
 
 public class ProductDto {
 
-	private int id;
+	private long id;
 	private String naam;
 	private String omschrijving;
 	private String categorie;
@@ -13,11 +13,11 @@ public class ProductDto {
 	private double subtotal;
 	private String afbeelding;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

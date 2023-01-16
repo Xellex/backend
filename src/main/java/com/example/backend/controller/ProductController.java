@@ -103,8 +103,18 @@ public class ProductController {
 	}
 
 	@GetMapping("product/{id}")
-	public Product productById(@PathVariable int id) {
-		return repo.findById(id).get();
+	public ProductDto productById(@PathVariable long id) {
+		Product product = repo.findById(id).get();
+		ProductDto productDto = new ProductDto();
+		productDto.setId(product.getId());
+		productDto.setNaam(product.getNaam());
+		productDto.setOmschrijving(product.getBeschrijving());
+		productDto.setVoorraad(product.getVoorraad());
+		productDto.setCategorie(product.getCategorie());
+		productDto.setKosten(product.getKosten());
+		productDto.setSubtotal(product.getSubtotal());
+		productDto.setAfbeelding(product.getAfbeelding());
+		return productDto;
 	}
 
 

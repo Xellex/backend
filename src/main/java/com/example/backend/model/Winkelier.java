@@ -15,7 +15,7 @@ public class Winkelier {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	
 	
 	@OneToMany(mappedBy = "winkelier")
@@ -36,10 +36,10 @@ public class Winkelier {
 	public void setToken(Token token) {
 		this.token = token;
 	}
-	public long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public List<Product> getProducten() {

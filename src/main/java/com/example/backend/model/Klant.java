@@ -44,14 +44,55 @@ public class Klant {
 	@Column(nullable = true)
 	private float accountBalance;
 
+	/**
+	 * @param id
+	 * @param naam
+	 * @param adres
+	 * @param geboortedatum
+	 * @param telefoonnummer
+	 * @param email
+	 * @param password
+	 * @param cCinfo
+	 * @param shippingInfo
+	 * @param accountBalance
+	 * @param bestelGeschiedenis
+	 * @param token
+	 * @param winkelwagen
+	 * @param recensie
+	 * @param bestelling
+	 * @param verlanglijstproduct
+	 */
+	public Klant(int id, String naam, String adres, LocalDate geboortedatum, String telefoonnummer, String email,
+			String password, String cCinfo, String shippingInfo, float accountBalance, String bestelGeschiedenis,
+			Token token, Winkelwagen winkelwagen, List<Recensie> recensie, List<Bestelling> bestelling,
+			List<VerlanglijstProduct> verlanglijstproduct) {
+		super();
+		this.id = id;
+		this.naam = naam;
+		this.adres = adres;
+		this.geboortedatum = geboortedatum;
+		this.telefoonnummer = telefoonnummer;
+		this.email = email;
+		this.password = password;
+		CCinfo = cCinfo;
+		this.shippingInfo = shippingInfo;
+		this.accountBalance = accountBalance;
+		this.bestelGeschiedenis = bestelGeschiedenis;
+		this.token = token;
+		this.winkelwagen = winkelwagen;
+		this.recensie = recensie;
+		this.bestelling = bestelling;
+		this.verlanglijstproduct = verlanglijstproduct;
+	}
+
 	@Column(nullable = true)
 	private String bestelGeschiedenis;
 
 	// Relaties
 	@OneToOne(mappedBy = "klant")
 	private Token token;
-	
-	@OneToOne (mappedBy = "klant")
+
+	@OneToOne(mappedBy = "klant")
 	private Winkelwagen winkelwagen;
 
 	@OneToMany(mappedBy = "klant")
@@ -62,6 +103,9 @@ public class Klant {
 
 	@OneToMany(mappedBy = "klant")
 	private List<VerlanglijstProduct> verlanglijstproduct;
+
+	public Klant() {
+	}
 
 	// Getters & Setters
 	public int getId() {
@@ -185,9 +229,9 @@ public class Klant {
 	}
 
 	public void setToken(Token token) {
-		this.token = token;	
+		this.token = token;
 	}
-	
+
 	public Token getToken() {
 		return token;
 	}

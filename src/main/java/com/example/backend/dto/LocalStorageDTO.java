@@ -8,14 +8,6 @@ public class LocalStorageDTO {
 	private String naam;
 	private Token token;
 	private String role;
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
 	
 	public LocalStorageDTO(boolean success) {
 		this.success = success;
@@ -45,5 +37,11 @@ public class LocalStorageDTO {
 	}
 	public void setRole(String role) {
 		this.role = role;
+	}
+	public boolean isSuccess() {
+		return success;
+	}
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 }

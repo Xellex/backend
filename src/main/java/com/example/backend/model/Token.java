@@ -14,7 +14,28 @@ public class Token {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
+
+	/**
+	 * @param id
+	 * @param klant
+	 * @param winkelier
+	 * @param randomstring
+	 * @param role
+	 * @param creationTime
+	 */
+	public Token(int id, Klant klant, Winkelier winkelier, String randomstring, String role, long creationTime) {
+		super();
+		this.id = id;
+		this.klant = klant;
+		this.winkelier = winkelier;
+		this.randomstring = randomstring;
+		this.role = role;
+		this.creationTime = creationTime;
+	}
+	
+	public Token() {
+	}
 
 	@OneToOne
 	private Klant klant;
@@ -23,9 +44,9 @@ public class Token {
 	private Winkelier winkelier;
 	
 	private String randomstring;
-	private String role = "USER";
+	private String role = "KLANT";
 	private long creationTime;
-	private long expirationTime = 86400000; // 1 day in milliseconds
+	//private long expirationTime = 86400000; // 1 day in milliseconds
 
 	public Token(int length, String role) {
 		this.role = role;
@@ -48,9 +69,9 @@ public class Token {
 		this.randomstring = new String(text);
 	}
 
-	public boolean isExpired() {
-		return System.currentTimeMillis() - creationTime > expirationTime;
-	}
+//	public boolean isExpired() {
+//		return System.currentTimeMillis() - creationTime > expirationTime;
+//	}
 
 	public String getRandomstring() {
 		return randomstring;
@@ -74,5 +95,21 @@ public class Token {
 
 	public void setCreationtime(Long creationTime) {
 		this.creationTime = creationTime;
+	}
+	
+	public Klant getKlant() {
+		return klant;
+	}
+
+	public void setKlant(Klant klant) {
+		this.klant = klant;
+	}
+
+	public Winkelier getWinkelier() {
+		return winkelier;
+	}
+
+	public void setWinkelier(Winkelier winkelier) {
+		this.winkelier = winkelier;
 	}
 }

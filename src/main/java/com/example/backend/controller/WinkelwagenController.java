@@ -16,6 +16,7 @@ import com.example.backend.dto.CreateWinkelwagenProductDTO;
 import com.example.backend.dto.ResponseDTO;
 import com.example.backend.model.Klant;
 import com.example.backend.model.Product;
+import com.example.backend.model.Token;
 import com.example.backend.model.Winkelwagen;
 import com.example.backend.model.WinkelwagenProduct;
 import com.example.backend.repo.IKlantenRepository;
@@ -45,9 +46,17 @@ public class WinkelwagenController {
 	@PostMapping("winkelwagen/product")
 	public ResponseDTO aanmaken(@RequestBody CreateWinkelwagenProductDTO dto,
 			@RequestHeader("Authentication") String authenticationToken) {
+		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
+		if (optionalToken.isEmpty())
+			return new ResponseDTO(false, "No token");
+
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
+		if (!rights)
+			return new ResponseDTO(false, "Geen rechten");
+		
+		Klant klant = optionalToken.get().getKlant();
+		
 		// vinden van winkelwagen bij de klant
-		Klant klant = klantrepo.findById(1).orElse(null);
 		Optional<Winkelwagen> wwdb = winkelwagenrepo.findByKlant(klant);
 		if (wwdb.isEmpty()) {
 

@@ -1,6 +1,7 @@
 package com.example.backend.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Bestelling {
@@ -22,6 +24,9 @@ public class Bestelling {
 	private String shippingId;
 	@Enumerated (EnumType.STRING)
 	private Bestellingstatus bestellingstatus;
+	
+	@OneToMany(mappedBy = "bestelling")
+	private List<BestellingProduct> bestellingproducten;
 	
 	@ManyToOne
 	private Klant klant;
@@ -73,7 +78,13 @@ public class Bestelling {
 	public void setKlant(Klant klant) {
 		this.klant = klant;
 	}
-	
-	
+
+	public List<BestellingProduct> getBestellingproducten() {
+		return bestellingproducten;
+	}
+
+	public void setBestellingproducten(List<BestellingProduct> bestellingproducten) {
+		this.bestellingproducten = bestellingproducten;
+	}
 	
 }

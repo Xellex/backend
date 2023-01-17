@@ -2,9 +2,14 @@ package com.example.backend.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -14,11 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.CreateWinkelwagenProductDTO;
 import com.example.backend.dto.ResponseDTO;
+import com.example.backend.model.Bestelling;
+import com.example.backend.model.BestellingProduct;
+import com.example.backend.model.Bestellingstatus;
 import com.example.backend.model.Klant;
 import com.example.backend.model.Product;
 import com.example.backend.model.Token;
 import com.example.backend.model.Winkelwagen;
 import com.example.backend.model.WinkelwagenProduct;
+import com.example.backend.repo.IBestellingProductRepository;
+import com.example.backend.repo.IBestellingRepository;
 import com.example.backend.repo.IKlantenRepository;
 import com.example.backend.repo.IProductRepository;
 import com.example.backend.repo.IWinkelwagenProductRepository;
@@ -39,6 +49,12 @@ public class WinkelwagenController {
 
 	@Autowired
 	private IWinkelwagenProductRepository winkelwagenProductRepo;
+	
+	@Autowired
+	private IBestellingRepository bestellingrepo;
+	
+	@Autowired
+	private IBestellingProductRepository bestellingproductrepo;
 
 	@Autowired
 	private AuthenticationService authService;
@@ -53,9 +69,9 @@ public class WinkelwagenController {
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
 		if (!rights)
 			return new ResponseDTO(false, "Geen rechten");
-		
+
 		Klant klant = optionalToken.get().getKlant();
-		
+
 		// vinden van winkelwagen bij de klant
 		Optional<Winkelwagen> wwdb = winkelwagenrepo.findByKlant(klant);
 		if (wwdb.isEmpty()) {
@@ -93,53 +109,59 @@ public class WinkelwagenController {
 		}
 	}
 
-	// check of winkelwagen aanwezig is voor de huidige user
-	// als die nog niet bestaat, dan aanmaken
-	// dan product toevoegen
-//		Klant klant = klantrepo.findById(1).get();
-//		if (klant.getWinkelwagen() == null) {
-//
-//			Winkelwagen winkelwagen = new Winkelwagen();
-//			winkelwagen.setKlant(klant);
-//			winkelwagen.setDatumToegevoegd(LocalDateTime.now());
-//			repo.save(winkelwagen);
-//			klant.setWinkelwagen(winkelwagen);
-//		}
-//
-//		Product product = productrepo.findById(dto.getProductId()).get();
-//		WinkelwagenProduct winkelwagenProduct = new WinkelwagenProduct();
-//		winkelwagenProduct.setProduct(product);
-//		winkelwagenProduct.setHoeveelheid(dto.getHoeveelheid());
-//		winkelwagenProduct.setAangemaakt(LocalDate.now());
-//		winkelwagenProduct.setWinkelwagen(klant.getWinkelwagen());
-//
-//		winkelwagenProductRepo.save(winkelwagenProduct);
+	@PostMapping("winkelwagen/bestellen")
+	public ResponseDTO bestellen(@RequestHeader("Authentication") String authenticationToken) {
+		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
+		if (optionalToken.isEmpty())
+			return new ResponseDTO(false, "No token");
 
-//	@RequestMapping(value = "winkelwagen/aanmaken", method = RequestMethod.POST)
-//	public void create(@RequestBody WinkelwagenProduct winkelwagen) {
-//		repo.save(winkelwagen);
-//
-//	}
-//
-//	@RequestMapping(value = "winkelwagen/{id}", method = RequestMethod.PUT)
-//	public void update(@PathVariable long id, @RequestBody WinkelwagenProduct winkelwagen) {
-//		// database winkelwagen
-//		WinkelwagenProduct ww = repo.findById(id).get();
-//
-//		// update de db winkelwagen met winkelwagen uit de request body
-//		ww.setHoeveelheid(winkelwagen.getHoeveelheid());
-//		ww.setAangemaakt(winkelwagen.getAangemaakt());
-//		// save the database winkelwagen
-//		repo.save(ww);
-//	}
-//
-//	@RequestMapping(value = "winkelwagen/verwijderen/{id}", method = RequestMethod.DELETE)
-//	public void delete(@PathVariable long id) {
-//		repo.deleteById(id);
-//	}
-//
-//	@RequestMapping(value = "winkelwagens/opvragen/{id}")
-//	public Winkelwagen winkelwagenid(@PathVariable long id) {
-//		return repo.findById(id).get();
-//	}
+		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
+		//if (!rights)return new ResponseDTO(false, "Geen rechten");
+
+		// klant uit token
+		Klant klant = optionalToken.get().getKlant();
+		// winkelwagen uit klant
+		Winkelwagen wwklant = klant.getWinkelwagen();
+		// winkelwagenproducten geassocieerd met ww uit de db
+		List<WinkelwagenProduct> winkelwagenproductList = winkelwagenProductRepo.findByWinkelwagen(wwklant);
+		
+		//Voor elk product halen we de meest recente prijs op en stoppen de product in de bestelling
+		if(!winkelwagenproductList.isEmpty()) {
+			
+			Bestelling bestelling = new Bestelling();
+			
+			//creeer bestellingproduct
+			BestellingProduct bestellingProduct = new BestellingProduct();
+			List<BestellingProduct> bestellingproducten = new ArrayList<BestellingProduct>();
+			
+			//producten uit de winkelwagenproducten ophalen om zo de meest recente prijs te krijgen
+			for (WinkelwagenProduct winkelwagenProduct : winkelwagenproductList) {
+				Product product = winkelwagenProduct.getProduct();
+				
+				//sla de hoeveelheid van het product in bestelling product
+				bestellingProduct.setHoeveelheid(winkelwagenProduct.getHoeveelheid());
+				
+				//sla de productprijs op in bestelling product
+				bestellingProduct.setUnitCost(product.getKosten());
+				
+				//Vermedigvuldig voor het totaal
+				bestellingProduct.setSubtotal(product.getKosten() * winkelwagenProduct.getHoeveelheid());
+				
+				//Voed het gecreeerde bestellingsproduct toe aan een lijst.
+				bestellingproducten.add(bestellingProduct);
+	
+				bestellingProduct.setBestelling(bestelling);
+				bestellingproductrepo.save(bestellingProduct);
+			}
+			//voeg de net gecreeerde lijst met bestellingproducten toe aan bestelling.
+			bestelling.setBestellingproducten(bestellingproducten);
+			
+			bestelling.setDateCreated(LocalDateTime.now());
+			bestelling.setBestellingstatus(Bestellingstatus.CREATED);
+			bestelling.setKlant(klant);
+			bestellingrepo.save(bestelling);
+			return new ResponseDTO(true);
+		}
+		return new ResponseDTO(false, "geen producten in winkelmand");
+	}
 }

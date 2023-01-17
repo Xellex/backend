@@ -98,7 +98,6 @@ public class WinkelwagenController {
 			winkelwagenProduct.setHoeveelheid(1);
 			winkelwagenProduct.setAangemaakt(LocalDate.now());
 			winkelwagenProduct.setWinkelwagen(klant.getWinkelwagen());
-
 			winkelwagenProductRepo.save(winkelwagenProduct);
 			return new ResponseDTO(true);
 		} else {

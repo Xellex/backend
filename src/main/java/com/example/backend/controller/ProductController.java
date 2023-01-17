@@ -70,8 +70,7 @@ public class ProductController {
 		opslaanProduct.setKosten(product.getKosten());
 		opslaanProduct.setSubtotal(product.getSubtotal());
 		opslaanProduct.setAfbeelding(null);
-		opslaanProduct.setOntvangen(false);
-
+		
 		repo.save(opslaanProduct);
 
 		return responseDTO;

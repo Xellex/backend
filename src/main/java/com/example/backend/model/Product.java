@@ -38,9 +38,6 @@ public class Product {
 	@Column(nullable = true)
 	private String afbeelding;
 
-	@Column(nullable = true)
-	private boolean ontvangen;
-
 	// Relaties
 	@ManyToOne
 	private Winkelier winkelier;
@@ -71,7 +68,7 @@ public class Product {
 		this.kosten = kosten;
 		this.subtotal = subtotal;
 		this.afbeelding = afbeelding;
-		this.ontvangen = isOntvangen;
+		
 	}
 
 	public long getId() {
@@ -138,13 +135,7 @@ public class Product {
 		this.afbeelding = afbeelding;
 	}
 
-	public boolean isOntvangen() {
-		return ontvangen;
-	}
-
-	public void setOntvangen(boolean ontvangen) {
-		this.ontvangen = ontvangen;
-	}
+	
 
 	public Winkelier getWinkelier() {
 		return winkelier;

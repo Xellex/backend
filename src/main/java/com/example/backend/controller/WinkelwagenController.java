@@ -49,10 +49,10 @@ public class WinkelwagenController {
 
 	@Autowired
 	private IWinkelwagenProductRepository winkelwagenProductRepo;
-	
+
 	@Autowired
 	private IBestellingRepository bestellingrepo;
-	
+
 	@Autowired
 	private IBestellingProductRepository bestellingproductrepo;
 
@@ -73,39 +73,43 @@ public class WinkelwagenController {
 		Klant klant = optionalToken.get().getKlant();
 
 		// vinden van winkelwagen bij de klant
-		Optional<Winkelwagen> wwdb = winkelwagenrepo.findByKlant(klant);
-		if (wwdb.isEmpty()) {
-
-			Winkelwagen winkelwagen = new Winkelwagen();
-			winkelwagen.setKlant(klant);
-			winkelwagen.setDatumToegevoegd(LocalDateTime.now());
-			winkelwagenrepo.save(winkelwagen);
-			wwdb = Optional.of(winkelwagen);
-		}
+		Winkelwagen ww = klant.getWinkelwagen();
 		// vinden van winkelwagenproduct bij winkelwagen
-		Optional<Product> optionalProduct = productrepo.findById(dto.getProductId());
+		Product productdb = productrepo.findById(dto.getProductId()).orElse(null);
 
 		// als dat nul is, wordt dat 1
-		if (optionalProduct.isEmpty()) {
-			return new ResponseDTO(false, "product bestaat niet");
-		}
+		
 		// en als dat 1 is wordt dat +1
-		Optional<WinkelwagenProduct> optionalWinkelwagenProduct = winkelwagenProductRepo
-				.findByWinkelwagenAndProduct(wwdb.get(), optionalProduct.get());
-		if (optionalWinkelwagenProduct.isEmpty()) {
-			WinkelwagenProduct winkelwagenProduct = new WinkelwagenProduct();
-			winkelwagenProduct.setProduct(optionalProduct.get());
-			winkelwagenProduct.setHoeveelheid(1);
-			winkelwagenProduct.setAangemaakt(LocalDate.now());
-			winkelwagenProduct.setWinkelwagen(klant.getWinkelwagen());
-			winkelwagenProductRepo.save(winkelwagenProduct);
-			return new ResponseDTO(true);
-		} else {
-			WinkelwagenProduct winkelwagenProduct = optionalWinkelwagenProduct.get();
-			winkelwagenProduct.setHoeveelheid(winkelwagenProduct.getHoeveelheid() + 1);
-			winkelwagenProductRepo.save(winkelwagenProduct);
-			return new ResponseDTO(true);
-		}
+		if (productdb != null) {
+			WinkelwagenProduct wwpdb = winkelwagenProductRepo.findByWinkelwagenAndProduct(ww, productdb).orElse(null);
+			if (wwpdb == null) {
+				WinkelwagenProduct winkelwagenProduct = new WinkelwagenProduct();
+				winkelwagenProduct.setProduct(productdb);
+				winkelwagenProduct.setHoeveelheid(1);
+				winkelwagenProduct.setAangemaakt(LocalDate.now());
+				if (ww == null) {
+
+					Winkelwagen winkelwagen = new Winkelwagen();
+					winkelwagen.setKlant(klant);
+					winkelwagen.setDatumToegevoegd(LocalDateTime.now());
+					winkelwagenrepo.save(winkelwagen);
+					winkelwagenProduct.setWinkelwagen(winkelwagen);
+				} else {
+					winkelwagenProduct.setWinkelwagen(klant.getWinkelwagen());
+
+				}
+
+				winkelwagenProductRepo.save(winkelwagenProduct);
+				return new ResponseDTO(true);
+			} else {
+				wwpdb.setHoeveelheid(wwpdb.getHoeveelheid() + 1);
+				winkelwagenProductRepo.save(wwpdb);
+				return new ResponseDTO(true);
+			}
+		};
+		return new ResponseDTO(false, "product bestaat niet");
+		
+		
 	}
 
 	@PostMapping("winkelwagen/bestellen")
@@ -115,7 +119,7 @@ public class WinkelwagenController {
 			return new ResponseDTO(false, "No token");
 
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
-		//if (!rights)return new ResponseDTO(false, "Geen rechten");
+		// if (!rights)return new ResponseDTO(false, "Geen rechten");
 
 		// klant uit token
 		Klant klant = optionalToken.get().getKlant();
@@ -123,38 +127,40 @@ public class WinkelwagenController {
 		Winkelwagen wwklant = klant.getWinkelwagen();
 		// winkelwagenproducten geassocieerd met ww uit de db
 		List<WinkelwagenProduct> winkelwagenproductList = winkelwagenProductRepo.findByWinkelwagen(wwklant);
-		
-		//Voor elk product halen we de meest recente prijs op en stoppen de product in de bestelling
-		if(!winkelwagenproductList.isEmpty()) {
-			
+
+		// Voor elk product halen we de meest recente prijs op en stoppen de product in
+		// de bestelling
+		if (!winkelwagenproductList.isEmpty()) {
+
 			Bestelling bestelling = new Bestelling();
-			
-			//creeer bestellingproduct
+
+			// creeer bestellingproduct
 			BestellingProduct bestellingProduct = new BestellingProduct();
 			List<BestellingProduct> bestellingproducten = new ArrayList<BestellingProduct>();
-			
-			//producten uit de winkelwagenproducten ophalen om zo de meest recente prijs te krijgen
+
+			// producten uit de winkelwagenproducten ophalen om zo de meest recente prijs te
+			// krijgen
 			for (WinkelwagenProduct winkelwagenProduct : winkelwagenproductList) {
 				Product product = winkelwagenProduct.getProduct();
-				
-				//sla de hoeveelheid van het product in bestelling product
+
+				// sla de hoeveelheid van het product in bestelling product
 				bestellingProduct.setHoeveelheid(winkelwagenProduct.getHoeveelheid());
-				
-				//sla de productprijs op in bestelling product
+
+				// sla de productprijs op in bestelling product
 				bestellingProduct.setUnitCost(product.getKosten());
-				
-				//Vermedigvuldig voor het totaal
+
+				// Vermedigvuldig voor het totaal
 				bestellingProduct.setSubtotal(product.getKosten() * winkelwagenProduct.getHoeveelheid());
-				
-				//Voed het gecreeerde bestellingsproduct toe aan een lijst.
+
+				// Voed het gecreeerde bestellingsproduct toe aan een lijst.
 				bestellingproducten.add(bestellingProduct);
-	
+
 				bestellingProduct.setBestelling(bestelling);
 				bestellingproductrepo.save(bestellingProduct);
 			}
-			//voeg de net gecreeerde lijst met bestellingproducten toe aan bestelling.
+			// voeg de net gecreeerde lijst met bestellingproducten toe aan bestelling.
 			bestelling.setBestellingproducten(bestellingproducten);
-			
+
 			bestelling.setDateCreated(LocalDateTime.now());
 			bestelling.setBestellingstatus(Bestellingstatus.CREATED);
 			bestelling.setKlant(klant);

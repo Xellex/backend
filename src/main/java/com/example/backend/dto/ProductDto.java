@@ -2,22 +2,24 @@ package com.example.backend.dto;
 
 import javax.persistence.Column;
 
+import com.example.backend.model.ProductCategorie;
+
 public class ProductDto {
 
-	private int id;
+	private long id;
 	private String naam;
 	private String omschrijving;
-	private String categorie;
+	private ProductCategorie categorie;
 	private int voorraad;
 	private double kosten;
 	private double subtotal;
 	private String afbeelding;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -37,12 +39,12 @@ public class ProductDto {
 		this.omschrijving = omschrijving;
 	}
 
-	public String getCategorie() {
+	public ProductCategorie getCategorie() {
 		return categorie;
 	}
 
-	public void setCategorie(String categorie) {
-		this.categorie = categorie;
+	public void setCategorie(ProductCategorie productCategorie) {
+		this.categorie = productCategorie;
 	}
 
 	public int getVoorraad() {

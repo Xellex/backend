@@ -1,4 +1,6 @@
-package com.example.backend.repo;
+ package com.example.backend.repo;
+
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -8,8 +10,6 @@ public interface IKlantenRepository extends JpaRepository<Klant, Integer>{
 
 	public boolean existsByEmail(String email);
 	public Klant findByPassword(String password);
-
-
-
-		
+	
+	public Optional<Klant> findByEmailAndPassword(String email, String Password);
 }

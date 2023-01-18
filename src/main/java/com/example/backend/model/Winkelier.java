@@ -8,13 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Winkelier {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	
 	
 	@OneToMany(mappedBy = "winkelier")
@@ -26,10 +27,19 @@ public class Winkelier {
 	@Column(length = 100, nullable = false)
 	private String email;
 	
-	public long getId() {
+	@OneToOne(mappedBy = "winkelier")
+	private Token token;
+	
+	public Token getToken() {
+		return token;
+	}
+	public void setToken(Token token) {
+		this.token = token;
+	}
+	public int getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public List<Product> getProducten() {

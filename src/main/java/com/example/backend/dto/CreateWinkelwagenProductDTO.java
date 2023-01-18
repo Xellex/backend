@@ -3,7 +3,7 @@ package com.example.backend.dto;
 public class CreateWinkelwagenProductDTO {
 	
 	private int hoeveelheid;
-	private int productId;
+	private long productId;
 	
 	
 	
@@ -13,7 +13,7 @@ public class CreateWinkelwagenProductDTO {
 	public void setHoeveelheid(int hoeveelheid) {
 		this.hoeveelheid = hoeveelheid;
 	}
-	public int getProductId() {
+	public long getProductId() {
 		return productId;
 	}
 	public void setProductId(int productId) {

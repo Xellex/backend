@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +17,7 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 
 	@Column(nullable = false)
 	private String naam;
@@ -27,19 +29,17 @@ public class Product {
 	private int voorraad;
 
 	@Column(nullable = false)
-	private String categorie;
+	@Enumerated (EnumType.STRING)
+	private ProductCategorie categorie;
 
-	@Column(columnDefinition = "Decimal(10,2) default '0.00'")
+	@Column(columnDefinition = "Decimal(10,2)")
 	private double kosten;
 
-	@Column(columnDefinition = "Decimal(10,2) default '0.00'")
+	@Column(columnDefinition = "Decimal(10,2)")
 	private double subtotal;
 
 	@Column(nullable = true)
 	private String afbeelding;
-
-	@Column(nullable = true)
-	private boolean ontvangen;
 
 	// Relaties
 	@ManyToOne
@@ -60,7 +60,7 @@ public class Product {
 
 	}
 
-	public Product(int id, String naam, String beschrijving, int voorraad, String categorie, double kosten,
+	public Product(int id, String naam, String beschrijving, int voorraad, ProductCategorie categorie, double kosten,
 			double subtotal, String afbeelding, boolean isOntvangen) {
 		super();
 		this.id = id;
@@ -71,14 +71,14 @@ public class Product {
 		this.kosten = kosten;
 		this.subtotal = subtotal;
 		this.afbeelding = afbeelding;
-		this.ontvangen = isOntvangen;
+		
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -106,11 +106,11 @@ public class Product {
 		this.voorraad = voorraad;
 	}
 
-	public String getCategorie() {
+	public ProductCategorie getCategorie() {
 		return categorie;
 	}
 
-	public void setCategorie(String categorie) {
+	public void setCategorie(ProductCategorie categorie) {
 		this.categorie = categorie;
 	}
 
@@ -138,13 +138,7 @@ public class Product {
 		this.afbeelding = afbeelding;
 	}
 
-	public boolean isOntvangen() {
-		return ontvangen;
-	}
-
-	public void setOntvangen(boolean ontvangen) {
-		this.ontvangen = ontvangen;
-	}
+	
 
 	public Winkelier getWinkelier() {
 		return winkelier;

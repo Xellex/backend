@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
 @Entity
 public class BestellingProduct {
 
@@ -14,21 +15,18 @@ public class BestellingProduct {
 	private int hoeveelheid;
 	private double unitCost;
 	private double subtotal;
-	private int factuurID;
-	private boolean ontvangen;
 	
 	@ManyToOne
 	private Product product;
 	
 	@ManyToOne
 	private Bestelling bestelling;
+	
+	public BestellingProduct() {
+	}
 
 	public long getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public int getHoeveelheid() {
@@ -55,22 +53,6 @@ public class BestellingProduct {
 		this.subtotal = subtotal;
 	}
 
-	public int getFactuurID() {
-		return factuurID;
-	}
-
-	public void setFactuurID(int factuurID) {
-		this.factuurID = factuurID;
-	}
-
-	public boolean isOntvangen() {
-		return ontvangen;
-	}
-
-	public void setOntvangen(boolean ontvangen) {
-		this.ontvangen = ontvangen;
-	}
-
 	public Product getProduct() {
 		return product;
 	}
@@ -86,8 +68,4 @@ public class BestellingProduct {
 	public void setBestelling(Bestelling bestelling) {
 		this.bestelling = bestelling;
 	}
-	
-	
-	
-	
 }

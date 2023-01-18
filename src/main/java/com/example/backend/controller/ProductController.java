@@ -15,6 +15,7 @@ import com.example.backend.dto.CreateProductDTO;
 import com.example.backend.dto.ProductDto;
 import com.example.backend.dto.ResponseDTO;
 import com.example.backend.model.Product;
+import com.example.backend.model.ProductCategorie;
 import com.example.backend.repo.IProductRepository;
 
 @RestController
@@ -22,6 +23,16 @@ public class ProductController {
 
 	@Autowired
 	private IProductRepository repo;
+
+	@GetMapping("product/categorieen")
+	public List<String> getMyEnumValues() {
+	    List<String> categoryNames = new ArrayList<>();
+	    for (ProductCategorie category : ProductCategorie.values()) {
+	        categoryNames.add(category.name());
+	    }
+	    return categoryNames;
+	}
+
 
 	@RequestMapping(value = "product/aanmaken", method = RequestMethod.POST)
 	public ResponseDTO create(@RequestBody CreateProductDTO product) {
@@ -70,7 +81,7 @@ public class ProductController {
 		opslaanProduct.setKosten(product.getKosten());
 		opslaanProduct.setSubtotal(product.getSubtotal());
 		opslaanProduct.setAfbeelding(null);
-		
+
 		repo.save(opslaanProduct);
 
 		return responseDTO;
@@ -116,6 +127,5 @@ public class ProductController {
 		return productDto;
 	}
 
-
-	}
+}
 //

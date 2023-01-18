@@ -1,10 +1,12 @@
 package com.example.backend.dto;
 
+import com.example.backend.model.ProductCategorie;
+
 public class CreateProductDTO {
 
 	private String naam;
 	private String beschrijving;
-	private String categorie;
+	private ProductCategorie categorie;
 	private int voorraad;
 	private double kosten;
 	private double subtotal;
@@ -25,11 +27,11 @@ public class CreateProductDTO {
 		this.beschrijving = beschrijving;
 	}
 
-	public String getCategorie() {
+	public ProductCategorie getCategorie() {
 		return categorie;
 	}
 
-	public void setCategorie(String categorie) {
+	public void setCategorie(ProductCategorie categorie) {
 		this.categorie = categorie;
 	}
 

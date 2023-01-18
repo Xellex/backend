@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,12 +29,13 @@ public class Product {
 	private int voorraad;
 
 	@Column(nullable = false)
-	private String categorie;
+	@Enumerated (EnumType.STRING)
+	private ProductCategorie categorie;
 
-	@Column(columnDefinition = "Decimal(10,2) default '0.00'")
+	@Column(columnDefinition = "Decimal(10,2)")
 	private double kosten;
 
-	@Column(columnDefinition = "Decimal(10,2) default '0.00'")
+	@Column(columnDefinition = "Decimal(10,2)")
 	private double subtotal;
 
 	@Column(nullable = true)
@@ -57,7 +60,7 @@ public class Product {
 
 	}
 
-	public Product(int id, String naam, String beschrijving, int voorraad, String categorie, double kosten,
+	public Product(int id, String naam, String beschrijving, int voorraad, ProductCategorie categorie, double kosten,
 			double subtotal, String afbeelding, boolean isOntvangen) {
 		super();
 		this.id = id;
@@ -103,11 +106,11 @@ public class Product {
 		this.voorraad = voorraad;
 	}
 
-	public String getCategorie() {
+	public ProductCategorie getCategorie() {
 		return categorie;
 	}
 
-	public void setCategorie(String categorie) {
+	public void setCategorie(ProductCategorie categorie) {
 		this.categorie = categorie;
 	}
 

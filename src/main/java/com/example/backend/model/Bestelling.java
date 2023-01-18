@@ -22,6 +22,7 @@ public class Bestelling {
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateShipped;
 	private String shippingId;
+	
 	@Enumerated (EnumType.STRING)
 	private Bestellingstatus bestellingstatus;
 	

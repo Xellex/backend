@@ -169,4 +169,12 @@ public class WinkelwagenController {
 		}
 		return new ResponseDTO(false, "geen producten in winkelmand");
 	}
-}
+	@RequestMapping(value = "winkelwagen/product/{id}", method = RequestMethod.DELETE)
+	public void delete(@PathVariable long id) {
+		winkelwagenProductRepo.deleteById(id);
+	}
+
+	}
+	
+
+

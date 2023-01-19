@@ -101,14 +101,14 @@ public class ProductController {
 			productDto.setNaam(product.getNaam());
 			productDto.setOmschrijving(product.getBeschrijving());
 			productDto.setVoorraad(product.getVoorraad());
-			productDto.setCategorie(product.getCategorie());
+			productDto.setCategorie(product.getCategorie().Feestkleding);
 			productDto.setKosten(product.getKosten());
 			productDto.setSubtotal(product.getSubtotal());
 			productDto.setAfbeelding(product.getAfbeelding());
 
+			//sla bestelproductop
 			productenDtoLijst.add(productDto);
 		}
-
 		return productenDtoLijst;
 	}
 

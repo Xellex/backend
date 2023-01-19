@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.CreateProductDTO;
 import com.example.backend.dto.CreateWinkelwagenProductDTO;
 import com.example.backend.dto.ResponseDTO;
+import com.example.backend.dto.WinkelwagenDTO;
 import com.example.backend.model.Bestelling;
 import com.example.backend.model.BestellingProduct;
 import com.example.backend.model.Bestellingstatus;
@@ -59,7 +61,7 @@ public class WinkelwagenController {
 	@Autowired
 	private AuthenticationService authService;
 
-	@PostMapping("winkelwagen/product")
+	@PostMapping("winkelwagen/product/toevoegen")
 	public ResponseDTO aanmaken(@RequestBody CreateWinkelwagenProductDTO dto,
 			@RequestHeader("Authentication") String authenticationToken) {
 		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
@@ -72,32 +74,28 @@ public class WinkelwagenController {
 
 		Klant klant = optionalToken.get().getKlant();
 
-		// vinden van winkelwagen bij de klant
-		Winkelwagen ww = klant.getWinkelwagen();
-		// vinden van winkelwagenproduct bij winkelwagen
+		// vinden van het product uit de productID
 		Product productdb = productrepo.findById(dto.getProductId()).orElse(null);
 
-		// als dat nul is, wordt dat 1
-		
-		// en als dat 1 is wordt dat +1
 		if (productdb != null) {
+
+			// vinden van winkelwagen bij de klant
+			Winkelwagen ww = klant.getWinkelwagen();
+			if (ww == null) {
+				Winkelwagen wwnew = new Winkelwagen();
+				wwnew.setKlant(klant);
+				wwnew.setDatumToegevoegd(LocalDateTime.now());
+				winkelwagenrepo.save(wwnew);
+				ww = wwnew;
+			}
+
 			WinkelwagenProduct wwpdb = winkelwagenProductRepo.findByWinkelwagenAndProduct(ww, productdb).orElse(null);
 			if (wwpdb == null) {
 				WinkelwagenProduct winkelwagenProduct = new WinkelwagenProduct();
 				winkelwagenProduct.setProduct(productdb);
 				winkelwagenProduct.setHoeveelheid(1);
 				winkelwagenProduct.setAangemaakt(LocalDate.now());
-				if (ww == null) {
-
-					Winkelwagen winkelwagen = new Winkelwagen();
-					winkelwagen.setKlant(klant);
-					winkelwagen.setDatumToegevoegd(LocalDateTime.now());
-					winkelwagenrepo.save(winkelwagen);
-					winkelwagenProduct.setWinkelwagen(winkelwagen);
-				} else {
-					winkelwagenProduct.setWinkelwagen(klant.getWinkelwagen());
-
-				}
+				winkelwagenProduct.setWinkelwagen(ww);
 
 				winkelwagenProductRepo.save(winkelwagenProduct);
 				return new ResponseDTO(true);
@@ -106,10 +104,45 @@ public class WinkelwagenController {
 				winkelwagenProductRepo.save(wwpdb);
 				return new ResponseDTO(true);
 			}
-		};
+		}
 		return new ResponseDTO(false, "product bestaat niet");
-		
-		
+	}
+
+	@PostMapping("winkelwagen/product/verwijderen")
+	public ResponseDTO verwijderen(@RequestBody CreateWinkelwagenProductDTO dto,
+			@RequestHeader("Authentication") String authenticationToken) {
+		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
+		if (optionalToken.isEmpty())
+			return new ResponseDTO(false, "No token");
+
+		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
+		if (!rights)
+			return new ResponseDTO(false, "Geen rechten");
+
+		Klant klant = optionalToken.get().getKlant();
+
+		// vinden van het product uit de productID
+		Product productdb = productrepo.findById(dto.getProductId()).orElse(null);
+
+		if (productdb != null) {
+
+			// vinden van winkelwagen bij de klant
+			Winkelwagen ww = klant.getWinkelwagen();
+			if (ww == null)
+				return new ResponseDTO(false, "Product zit niet in winkelwagen");
+
+			WinkelwagenProduct wwpdb = winkelwagenProductRepo.findByWinkelwagenAndProduct(ww, productdb).orElse(null);
+			if (wwpdb == null) {
+				return new ResponseDTO(false, "Product zit niet in winkelwagen");
+			} else {
+				if (wwpdb.getHoeveelheid() == 0)
+					return new ResponseDTO(false, "Product zit niet in winkelwagen");
+				wwpdb.setHoeveelheid(wwpdb.getHoeveelheid() - 1);
+				winkelwagenProductRepo.save(wwpdb);
+				return new ResponseDTO(true);
+			}
+		}
+		return new ResponseDTO(false, "product bestaat niet");
 	}
 
 	@PostMapping("winkelwagen/bestellen")
@@ -156,7 +189,7 @@ public class WinkelwagenController {
 				bestellingproducten.add(bestellingProduct);
 
 				bestellingProduct.setBestelling(bestelling);
-				bestellingproductrepo.save(bestellingProduct);
+				
 			}
 			// voeg de net gecreeerde lijst met bestellingproducten toe aan bestelling.
 			bestelling.setBestellingproducten(bestellingproducten);
@@ -169,12 +202,29 @@ public class WinkelwagenController {
 		}
 		return new ResponseDTO(false, "geen producten in winkelmand");
 	}
-	@RequestMapping(value = "winkelwagen/product/{id}", method = RequestMethod.DELETE)
-	public void delete(@PathVariable long id) {
-		winkelwagenProductRepo.deleteById(id);
-	}
+
+	@GetMapping("winkelwagen/klant")
+	public WinkelwagenDTO getMyVariableValues(@RequestHeader("Authentication") String authenticationToken) {
+
+		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
+
+		// klant uit token
+		Klant klant = optionalToken.get().getKlant();
+		Winkelwagen ww = klant.getWinkelwagen();
+		List<WinkelwagenProduct> wwpddb = winkelwagenProductRepo.findByWinkelwagen(ww);
+
+		WinkelwagenDTO dto1 = new WinkelwagenDTO();
+		for (WinkelwagenProduct wwpd : wwpddb) {
+			CreateProductDTO p = new CreateProductDTO();
+			Product i = wwpd.getProduct();
+			p.setBeschrijving(i.getBeschrijving());
+			p.setCategorie(i.getCategorie());
+			p.setKosten(i.getKosten());
+			p.setNaam(i.getNaam());
+			dto1.addProduct(p, wwpd.getHoeveelheid());
+		}
+		return dto1;
 
 	}
-	
 
-
+}

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.AdminKlantDTO;
 import com.example.backend.dto.KlantDTO;
 import com.example.backend.dto.LocalStorageDTO;
 import com.example.backend.dto.LoginResponseDTO;
@@ -40,20 +41,20 @@ public class KlantenController {
 
 	@Autowired
 	private ITokenRepository tokenRepo;
-	
+
 	@Autowired
 	private AuthenticationService authService;
 
 	@RequestMapping(value = "klanten/aanmaken", method = RequestMethod.POST)
-	public ResponseDTO create(@RequestBody Klant klant, @RequestHeader("Authentication") String authenticationToken) {
-		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
-
-		if (rights) {
+	public ResponseDTO create(@RequestBody Klant klant) {
+		try {
 			klantRepo.save(klant);
 
 			return new ResponseDTO(true);
-		} else 
-			return new ResponseDTO(false, "Je hebt geen rechten");
+		} catch (Exception e) {
+			return new ResponseDTO(false);
+		}
+
 	}
 
 	@RequestMapping(value = "klant/registreren", method = RequestMethod.POST)
@@ -64,19 +65,28 @@ public class KlantenController {
 	@GetMapping("klanten/id/{id}")
 	public boolean klantById(@PathVariable int id, @RequestHeader("Authentication") String authenticationToken) {
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
-		if(rights) {
+		if (rights) {
 			Klant klant = klantRepo.findById(id).get();
 			return true;
 		}
 		return false;
 	}
-	
+
 	@GetMapping("klanten/all")
-	public List<Klant> klantById(@RequestHeader("Authentication") String authenticationToken) {
+	public ArrayList<AdminKlantDTO> klantById(@RequestHeader("Authentication") String authenticationToken) {
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
-		if(rights) {
-			
-			return klantRepo.findAll();
+		if (rights) {
+			ArrayList<AdminKlantDTO> klant = new ArrayList<AdminKlantDTO>();
+			ArrayList<Klant> arrayList = new ArrayList<>(klantRepo.findAll());
+			for (Klant k : arrayList) {
+				AdminKlantDTO i = new AdminKlantDTO();
+				i.setAdres(k.getAdres());
+				i.setEmail(k.getEmail());
+				i.setNaam(k.getNaam());
+				i.setTelefoonnummer(k.getTelefoonnummer());
+				klant.add(i);
+			}
+			return klant;
 		}
 		return null;
 	}
@@ -84,9 +94,9 @@ public class KlantenController {
 	@PostMapping("klanten/inloggen")
 	public LoginResponseDTO checkEmailAndPassword(@RequestBody KlantDTO klant) {
 		ArrayList<String> errors = new ArrayList<String>();
-		
+
 		try {
-			
+
 			var email = klant.getUsername();
 			var password = klant.getPassword();
 			Winkelier winkelierDB = winkelierRepo.findByEmailAndPassword(email, password).orElse(null);

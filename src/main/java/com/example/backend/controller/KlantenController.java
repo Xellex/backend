@@ -49,7 +49,6 @@ public class KlantenController {
 	public ResponseDTO create(@RequestBody Klant klant) {
 		try {
 			klantRepo.save(klant);
-
 			return new ResponseDTO(true);
 		} catch (Exception e) {
 			return new ResponseDTO(false);
@@ -57,9 +56,17 @@ public class KlantenController {
 
 	}
 
-	@RequestMapping(value = "klant/registreren", method = RequestMethod.POST)
-	public void registreren(@RequestBody Klant klanten) {
-		klantRepo.save(klanten);
+	@PostMapping(value = "klant/registreren")
+	public ResponseDTO registreren(@RequestBody Klant klant) {
+		try {
+			klantRepo.save(klant);
+			return new ResponseDTO(true);
+		}
+		catch (Exception e) {
+			ArrayList<String> errors = new ArrayList<String>();
+			errors.add(e.toString());
+			return new ResponseDTO(false, errors);
+		}
 	}
 
 	@GetMapping("klanten/id/{id}")

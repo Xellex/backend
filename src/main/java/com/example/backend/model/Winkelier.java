@@ -17,7 +17,6 @@ public class Winkelier {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	
 	@OneToMany(mappedBy = "winkelier")
 	private List<Product> producten;
 	@Column(length = 100, nullable = false)

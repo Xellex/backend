@@ -3,18 +3,14 @@ package com.example.backend.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.ProductDTO;
@@ -31,7 +27,6 @@ import com.example.backend.model.Winkelwagen;
 import com.example.backend.model.WinkelwagenProduct;
 import com.example.backend.repo.IBestellingProductRepository;
 import com.example.backend.repo.IBestellingRepository;
-import com.example.backend.repo.IKlantenRepository;
 import com.example.backend.repo.IProductRepository;
 import com.example.backend.repo.IWinkelwagenProductRepository;
 import com.example.backend.repo.IWinkelwagenRepository;
@@ -42,10 +37,7 @@ public class WinkelwagenController {
 
 	@Autowired
 	private IWinkelwagenRepository winkelwagenrepo;
-
-	@Autowired
-	private IKlantenRepository klantrepo;
-
+	
 	@Autowired
 	private IProductRepository productrepo;
 
@@ -151,7 +143,7 @@ public class WinkelwagenController {
 		if (optionalToken.isEmpty())
 			return new ResponseDTO(false, "No token");
 
-		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
+		//boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
 
 		Klant klant = optionalToken.get().getKlant();
 

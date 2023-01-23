@@ -19,10 +19,15 @@ import com.example.backend.dto.AdminKlantDTO;
 import com.example.backend.dto.KlantDTO;
 import com.example.backend.dto.LocalStorageDTO;
 import com.example.backend.dto.LoginResponseDTO;
+import com.example.backend.dto.ProductDTO;
 import com.example.backend.dto.ResponseDTO;
+import com.example.backend.dto.WinkelwagenDTO;
 import com.example.backend.model.Klant;
+import com.example.backend.model.Product;
 import com.example.backend.model.Token;
 import com.example.backend.model.Winkelier;
+import com.example.backend.model.Winkelwagen;
+import com.example.backend.model.WinkelwagenProduct;
 import com.example.backend.repo.IKlantenRepository;
 import com.example.backend.repo.ITokenRepository;
 import com.example.backend.repo.IWinkelierRepository;
@@ -170,5 +175,34 @@ public class KlantenController {
 		} else {
 			return false;
 		}
+	}
+	
+	@GetMapping("klant/favorieten")
+	public ResponseDTO getMyVariableValues(@RequestHeader("Authentication") String authenticationToken) {
+
+//		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
+//		if (optionalToken.isEmpty())
+//			return new ResponseDTO(false, "No token");
+//
+//		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
+//		
+//		
+//		
+//		// klant uit token
+//		Klant klant = optionalToken.get().getKlant();
+//		Winkelwagen ww = klant.getWinkelwagen();
+//		List<WinkelwagenProduct> wwpddb = winkelwagenproductrepo.findByWinkelwagen(ww);
+//
+//		WinkelwagenDTO dto1 = new WinkelwagenDTO();
+//		for (WinkelwagenProduct wwpd : wwpddb) {
+//			ProductDTO p = new ProductDTO();
+//			Product i = wwpd.getProduct();
+//			p.setBeschrijving(i.getBeschrijving());
+//			p.setCategorie(i.getCategorie());
+//			p.setKosten(i.getKosten());
+//			p.setNaam(i.getNaam());
+//			dto1.addProduct(p, wwpd.getHoeveelheid());
+//		}
+		return new ResponseDTO(false);
 	}
 }

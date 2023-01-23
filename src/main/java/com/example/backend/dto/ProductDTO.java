@@ -1,15 +1,41 @@
 package com.example.backend.dto;
-
+import com.example.backend.model.Feestdagen;
 import com.example.backend.model.ProductCategorie;
 
-public class CreateProductDTO {
+public class ProductDTO {
 
+	private long id;
 	private String naam;
 	private String beschrijving;
 	private ProductCategorie categorie;
+	private Feestdagen feestdag;
 	private int voorraad;
 	private double kosten;
-	private double subtotal;
+	private double inkoop;
+
+	public double getInkoop() {
+		return inkoop;
+	}
+
+	public void setInkoop(double inkoop) {
+		this.inkoop = inkoop;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Feestdagen getFeestdag() {
+		return feestdag;
+	}
+
+	public void setFeestdag(Feestdagen feestdag) {
+		this.feestdag = feestdag;
+	}
 
 	public String getNaam() {
 		return naam;
@@ -49,13 +75,5 @@ public class CreateProductDTO {
 
 	public void setKosten(double kosten) {
 		this.kosten = kosten;
-	}
-
-	public double getSubtotal() {
-		return subtotal;
-	}
-
-	public void setSubtotal(double subtotal) {
-		this.subtotal = subtotal;
 	}
 }

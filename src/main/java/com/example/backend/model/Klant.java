@@ -17,76 +17,23 @@ public class Klant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String naam;
 
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String adres;
-
-	@Column(nullable = true)
-	private LocalDate geboortedatum;
-
-	@Column(nullable = true)
-	private String telefoonnummer;
 
 	@Column(nullable = false)
 	private String email;
 
 	@Column(nullable = false)
 	private String password;
-
+	
 	@Column(nullable = true)
-	private String CCinfo;
+	private String telefoonnummer;
 
 	@Column(nullable = true)
 	private String shippingInfo;
-
-	@Column(nullable = true)
-	private float accountBalance;
-
-	/**
-	 * @param id
-	 * @param naam
-	 * @param adres
-	 * @param geboortedatum
-	 * @param telefoonnummer
-	 * @param email
-	 * @param password
-	 * @param cCinfo
-	 * @param shippingInfo
-	 * @param accountBalance
-	 * @param bestelGeschiedenis
-	 * @param token
-	 * @param winkelwagen
-	 * @param recensie
-	 * @param bestelling
-	 * @param verlanglijstproduct
-	 */
-	public Klant(int id, String naam, String adres, LocalDate geboortedatum, String telefoonnummer, String email,
-			String password, String cCinfo, String shippingInfo, float accountBalance, String bestelGeschiedenis,
-			Token token, Winkelwagen winkelwagen, List<Recensie> recensie, List<Bestelling> bestelling,
-			List<VerlanglijstProduct> verlanglijstproduct) {
-		super();
-		this.id = id;
-		this.naam = naam;
-		this.adres = adres;
-		this.geboortedatum = geboortedatum;
-		this.telefoonnummer = telefoonnummer;
-		this.email = email;
-		this.password = password;
-		CCinfo = cCinfo;
-		this.shippingInfo = shippingInfo;
-		this.accountBalance = accountBalance;
-		this.bestelGeschiedenis = bestelGeschiedenis;
-		this.token = token;
-		this.winkelwagen = winkelwagen;
-		this.recensie = recensie;
-		this.bestelling = bestelling;
-		this.verlanglijstproduct = verlanglijstproduct;
-	}
-
-	@Column(nullable = true)
-	private String bestelGeschiedenis;
 
 	// Relaties
 	@OneToOne(mappedBy = "klant")
@@ -96,15 +43,42 @@ public class Klant {
 	private Winkelwagen winkelwagen;
 
 	@OneToMany(mappedBy = "klant")
-	private List<Recensie> recensie;
-
-	@OneToMany(mappedBy = "klant")
 	private List<Bestelling> bestelling;
 
 	@OneToMany(mappedBy = "klant")
 	private List<VerlanglijstProduct> verlanglijstproduct;
 
 	public Klant() {
+	}
+
+	/**
+	 * @param id
+	 * @param naam
+	 * @param adres
+	 * @param email
+	 * @param password
+	 * @param telefoonnummer
+	 * @param shippingInfo
+	 * @param token
+	 * @param winkelwagen
+	 * @param bestelling
+	 * @param verlanglijstproduct
+	 */
+	public Klant(int id, String naam, String adres, String email, String password, String telefoonnummer,
+			String shippingInfo, Token token, Winkelwagen winkelwagen, List<Bestelling> bestelling,
+			List<VerlanglijstProduct> verlanglijstproduct) {
+		super();
+		this.id = id;
+		this.naam = naam;
+		this.adres = adres;
+		this.email = email;
+		this.password = password;
+		this.telefoonnummer = telefoonnummer;
+		this.shippingInfo = shippingInfo;
+		this.token = token;
+		this.winkelwagen = winkelwagen;
+		this.bestelling = bestelling;
+		this.verlanglijstproduct = verlanglijstproduct;
 	}
 
 	// Getters & Setters
@@ -132,14 +106,6 @@ public class Klant {
 		this.adres = adres;
 	}
 
-	public LocalDate getGeboortedatum() {
-		return geboortedatum;
-	}
-
-	public void setGeboortedatum(LocalDate geboortedatum) {
-		this.geboortedatum = geboortedatum;
-	}
-
 	public String getTelefoonnummer() {
 		return telefoonnummer;
 	}
@@ -164,14 +130,6 @@ public class Klant {
 		this.password = password;
 	}
 
-	public String getCCinfo() {
-		return CCinfo;
-	}
-
-	public void setCCinfo(String cCinfo) {
-		CCinfo = cCinfo;
-	}
-
 	public String getShippingInfo() {
 		return shippingInfo;
 	}
@@ -180,36 +138,12 @@ public class Klant {
 		this.shippingInfo = shippingInfo;
 	}
 
-	public float getAccountBalance() {
-		return accountBalance;
-	}
-
-	public void setAccountBalance(float accountBalance) {
-		this.accountBalance = accountBalance;
-	}
-
-	public String getBestelGeschiedenis() {
-		return bestelGeschiedenis;
-	}
-
-	public void setBestelGeschiedenis(String bestelGeschiedenis) {
-		this.bestelGeschiedenis = bestelGeschiedenis;
-	}
-
 	public Winkelwagen getWinkelwagen() {
 		return winkelwagen;
 	}
 
 	public void setWinkelwagen(Winkelwagen winkelwagen) {
 		this.winkelwagen = winkelwagen;
-	}
-
-	public List<Recensie> getRecensie() {
-		return recensie;
-	}
-
-	public void setRecensie(List<Recensie> recensie) {
-		this.recensie = recensie;
 	}
 
 	public List<Bestelling> getBestelling() {

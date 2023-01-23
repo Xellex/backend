@@ -1,19 +1,30 @@
 package com.example.backend.dto;
 
-import javax.persistence.Column;
+import java.sql.Blob;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.backend.model.Feestdagen;
 import com.example.backend.model.ProductCategorie;
 
-public class ProductDto {
+public class ProductDTO {
 
 	private long id;
 	private String naam;
-	private String omschrijving;
+	private String beschrijving;
 	private ProductCategorie categorie;
+	private Feestdagen feestdag;
 	private int voorraad;
 	private double kosten;
-	private double subtotal;
-	private String afbeelding;
+	private double inkoop;
+
+	public double getInkoop() {
+		return inkoop;
+	}
+
+	public void setInkoop(double inkoop) {
+		this.inkoop = inkoop;
+	}
 
 	public long getId() {
 		return id;
@@ -21,6 +32,14 @@ public class ProductDto {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Feestdagen getFeestdag() {
+		return feestdag;
+	}
+
+	public void setFeestdag(Feestdagen feestdag) {
+		this.feestdag = feestdag;
 	}
 
 	public String getNaam() {
@@ -31,20 +50,20 @@ public class ProductDto {
 		this.naam = naam;
 	}
 
-	public String getOmschrijving() {
-		return omschrijving;
+	public String getBeschrijving() {
+		return beschrijving;
 	}
 
-	public void setOmschrijving(String omschrijving) {
-		this.omschrijving = omschrijving;
+	public void setBeschrijving(String beschrijving) {
+		this.beschrijving = beschrijving;
 	}
 
 	public ProductCategorie getCategorie() {
 		return categorie;
 	}
 
-	public void setCategorie(ProductCategorie productCategorie) {
-		this.categorie = productCategorie;
+	public void setCategorie(ProductCategorie categorie) {
+		this.categorie = categorie;
 	}
 
 	public int getVoorraad() {
@@ -61,21 +80,5 @@ public class ProductDto {
 
 	public void setKosten(double kosten) {
 		this.kosten = kosten;
-	}
-
-	public double getSubtotal() {
-		return subtotal;
-	}
-
-	public void setSubtotal(double subtotal) {
-		this.subtotal = subtotal;
-	}
-
-	public String getAfbeelding() {
-		return afbeelding;
-	}
-
-	public void setAfbeelding(String afbeelding) {
-		this.afbeelding = afbeelding;
 	}
 }

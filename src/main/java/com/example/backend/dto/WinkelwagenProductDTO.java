@@ -1,6 +1,6 @@
 package com.example.backend.dto;
 
-public class CreateWinkelwagenProductDTO {
+public class WinkelwagenProductDTO {
 	
 	private long productId;
 	

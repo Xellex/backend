@@ -16,7 +16,7 @@ public class WinkelwagenDTO {
 		return winkelwagen;
 	}
 
-	public void addProduct(CreateProductDTO product, int hoeveelheid) {
+	public void addProduct(ProductDTO product, int hoeveelheid) {
 		Object[] newProduct = { product, hoeveelheid };
 		this.winkelwagen.add(newProduct);
 	}

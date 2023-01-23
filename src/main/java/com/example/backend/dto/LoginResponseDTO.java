@@ -6,8 +6,8 @@ public class LoginResponseDTO {
 
 	private String randomstring;
 	private String role;
-	private List<String> validaties;
 	private String naam;
+	private List<String> validaties;
 	
 	/**
 	 * @param randomstring

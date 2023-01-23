@@ -8,8 +8,6 @@ public class ResponseDTO {
 	private boolean succes = false;
 
 	private List<String> validaties;
-	
-	private String token;
 
 	public ResponseDTO() {
 		super();

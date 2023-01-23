@@ -6,14 +6,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.example.backend.dto.CreateProductDTO;
-import com.example.backend.dto.ProductDto;
+import com.example.backend.dto.ProductDTO;
 import com.example.backend.dto.ResponseDTO;
+import com.example.backend.model.Feestdagen;
 import com.example.backend.model.Product;
 import com.example.backend.model.ProductCategorie;
 import com.example.backend.repo.IProductRepository;
@@ -25,17 +28,25 @@ public class ProductController {
 	private IProductRepository repo;
 
 	@GetMapping("product/categorieen")
-	public List<String> getMyEnumValues() {
-	    List<String> categoryNames = new ArrayList<>();
-	    for (ProductCategorie category : ProductCategorie.values()) {
-	        categoryNames.add(category.name());
-	    }
-	    return categoryNames;
+	public List<String> getMyEnumValuesCategorieen() {
+		List<String> categoryNames = new ArrayList<>();
+		for (ProductCategorie category : ProductCategorie.values()) {
+			categoryNames.add(category.name());
+		}
+		return categoryNames;
 	}
 
+	@GetMapping("product/feestdagen")
+	public List<String> getMyEnumValuesFeestdagen() {
+		List<String> feestdagNames = new ArrayList<>();
+		for (Feestdagen category : Feestdagen.values()) {
+			feestdagNames.add(category.name());
+		}
+		return feestdagNames;
+	}
 
-	@RequestMapping(value = "product/aanmaken", method = RequestMethod.POST)
-	public ResponseDTO create(@RequestBody CreateProductDTO product) {
+	@PostMapping(value = "product/toevoegen")
+	public ResponseDTO maakProductAann(@RequestBody ProductDTO product, MultipartFile image) {
 
 		ResponseDTO responseDTO = new ResponseDTO();
 		ArrayList<String> validaties = new ArrayList<>();
@@ -62,11 +73,6 @@ public class ProductController {
 			validaties.add("Kosten moeten groter zijn dan 0");
 		}
 
-		if (product.getSubtotal() < 0) {
-			responseDTO.setSucces(false);
-			validaties.add("Subtotal moeten groter zijn dan 0");
-		}
-
 		responseDTO.setValidaties(validaties);
 		if (!responseDTO.isSucces()) {
 			return responseDTO;
@@ -79,51 +85,43 @@ public class ProductController {
 		opslaanProduct.setVoorraad(product.getVoorraad());
 		opslaanProduct.setCategorie(product.getCategorie());
 		opslaanProduct.setKosten(product.getKosten());
-		opslaanProduct.setSubtotal(product.getSubtotal());
-		opslaanProduct.setAfbeelding(null);
-
+		opslaanProduct.setInkoop(product.getVoorraad());
+		opslaanProduct.setFeestdag(product.getFeestdag());
+		//opslaanProduct.setImage(product.getImage());
 		repo.save(opslaanProduct);
 
 		return responseDTO;
 	}
 
 	@GetMapping("producten")
-	public List<ProductDto> geefProductenWeer() {
-		// Uiteindelijke lijst
-		List<ProductDto> productenDtoLijst = new ArrayList<>();
+	public List<ProductDTO> geefProductenWeer() {
 
-		// Lijst uit de database
+		List<ProductDTO> productenDTOLijst = new ArrayList<>();
 		List<Product> productenDB = repo.findAll();
 
 		for (Product product : productenDB) {
-			ProductDto productDto = new ProductDto();
-			productDto.setId(product.getId());
-			productDto.setNaam(product.getNaam());
-			productDto.setOmschrijving(product.getBeschrijving());
-			productDto.setVoorraad(product.getVoorraad());
-			productDto.setCategorie(product.getCategorie().Feestkleding);
-			productDto.setKosten(product.getKosten());
-			productDto.setSubtotal(product.getSubtotal());
-			productDto.setAfbeelding(product.getAfbeelding());
-
-			//sla bestelproductop
-			productenDtoLijst.add(productDto);
+			ProductDTO productDTO = new ProductDTO();
+			productDTO.setId(product.getId());
+			productDTO.setNaam(product.getNaam());
+			productDTO.setBeschrijving(product.getBeschrijving());
+			productDTO.setVoorraad(product.getVoorraad());
+			productDTO.setCategorie(product.getCategorie());
+			productDTO.setKosten(product.getKosten());
+			productenDTOLijst.add(productDTO);
 		}
-		return productenDtoLijst;
+		return productenDTOLijst;
 	}
 
 	@GetMapping("product/{id}")
-	public ProductDto productById(@PathVariable long id) {
+	public ProductDTO productById(@PathVariable long id) {
 		Product product = repo.findById(id).get();
-		ProductDto productDto = new ProductDto();
+		ProductDTO productDto = new ProductDTO();
 		productDto.setId(product.getId());
 		productDto.setNaam(product.getNaam());
-		productDto.setOmschrijving(product.getBeschrijving());
+		productDto.setBeschrijving(product.getBeschrijving());
 		productDto.setVoorraad(product.getVoorraad());
 		productDto.setCategorie(product.getCategorie());
 		productDto.setKosten(product.getKosten());
-		productDto.setSubtotal(product.getSubtotal());
-		productDto.setAfbeelding(product.getAfbeelding());
 		return productDto;
 	}
 

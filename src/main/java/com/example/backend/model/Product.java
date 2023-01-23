@@ -1,8 +1,6 @@
 package com.example.backend.model;
 
-import java.sql.Blob;
 import java.util.List;
-import java.util.OptionalDouble;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,9 +1,4 @@
 package com.example.backend.dto;
-
-import java.sql.Blob;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.backend.model.Feestdagen;
 import com.example.backend.model.ProductCategorie;
 

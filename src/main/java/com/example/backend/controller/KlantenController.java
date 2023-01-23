@@ -1,8 +1,6 @@
 package com.example.backend.controller;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.AdminKlantDTO;
 import com.example.backend.dto.KlantDTO;
-import com.example.backend.dto.LocalStorageDTO;
 import com.example.backend.dto.LoginResponseDTO;
-import com.example.backend.dto.ProductDTO;
 import com.example.backend.dto.ResponseDTO;
-import com.example.backend.dto.WinkelwagenDTO;
 import com.example.backend.model.Klant;
-import com.example.backend.model.Product;
 import com.example.backend.model.Token;
 import com.example.backend.model.Winkelier;
-import com.example.backend.model.Winkelwagen;
-import com.example.backend.model.WinkelwagenProduct;
 import com.example.backend.repo.IKlantenRepository;
 import com.example.backend.repo.ITokenRepository;
 import com.example.backend.repo.IWinkelierRepository;
@@ -78,7 +70,7 @@ public class KlantenController {
 	public boolean klantById(@PathVariable int id, @RequestHeader("Authentication") String authenticationToken) {
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
 		if (rights) {
-			Klant klant = klantRepo.findById(id).get();
+			//Klant klant = klantRepo.findById(id).get();
 			return true;
 		}
 		return false;

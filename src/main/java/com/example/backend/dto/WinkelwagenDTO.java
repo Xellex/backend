@@ -2,8 +2,6 @@ package com.example.backend.dto;
 
 import java.util.ArrayList;
 
-import com.example.backend.model.Product;
-
 public class WinkelwagenDTO {
 
 	private ArrayList<Object[]> winkelwagen;

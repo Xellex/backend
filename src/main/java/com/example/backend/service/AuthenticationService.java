@@ -5,11 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.backend.dto.ResponseDTO;
-import com.example.backend.model.Klant;
 import com.example.backend.model.Token;
 import com.example.backend.repo.ITokenRepository;
-import com.example.backend.repo.IWinkelwagenRepository;
 
 @Service
 public class AuthenticationService {

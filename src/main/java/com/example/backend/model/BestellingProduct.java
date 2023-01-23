@@ -13,8 +13,8 @@ public class BestellingProduct {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private int hoeveelheid;
-	private double unitCost;
-	private double subtotal;
+	private double kosten;
+	private double inkoop;
 	
 	@ManyToOne
 	private Product product;
@@ -24,6 +24,53 @@ public class BestellingProduct {
 	
 	public BestellingProduct() {
 	}
+
+	/**
+	 * @param id
+	 * @param hoeveelheid
+	 * @param kosten
+	 * @param inkoop
+	 * @param product
+	 * @param bestelling
+	 */
+	public BestellingProduct(long id, int hoeveelheid, double kosten, double inkoop, Product product,
+			Bestelling bestelling) {
+		super();
+		this.id = id;
+		this.hoeveelheid = hoeveelheid;
+		this.kosten = kosten;
+		this.inkoop = inkoop;
+		this.product = product;
+		this.bestelling = bestelling;
+	}
+
+	public double getKosten() {
+		return kosten;
+	}
+
+	public void setKosten(double kosten) {
+		this.kosten = kosten;
+	}
+
+
+
+	public double getInkoop() {
+		return inkoop;
+	}
+
+
+
+	public void setInkoop(double inkoop) {
+		this.inkoop = inkoop;
+	}
+
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
 
 	public long getId() {
 		return id;
@@ -35,22 +82,6 @@ public class BestellingProduct {
 
 	public void setHoeveelheid(int hoeveelheid) {
 		this.hoeveelheid = hoeveelheid;
-	}
-
-	public double getUnitCost() {
-		return unitCost;
-	}
-
-	public void setUnitCost(double unitCost) {
-		this.unitCost = unitCost;
-	}
-
-	public double getSubtotal() {
-		return subtotal;
-	}
-
-	public void setSubtotal(double subtotal) {
-		this.subtotal = subtotal;
 	}
 
 	public Product getProduct() {

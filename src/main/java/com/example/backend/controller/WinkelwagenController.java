@@ -152,52 +152,40 @@ public class WinkelwagenController {
 			return new ResponseDTO(false, "No token");
 
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
-		// if (!rights)return new ResponseDTO(false, "Geen rechten");
 
-		// klant uit token
 		Klant klant = optionalToken.get().getKlant();
-		// winkelwagen uit klant
-		Winkelwagen wwklant = klant.getWinkelwagen();
-		// winkelwagenproducten geassocieerd met ww uit de db
-		List<WinkelwagenProduct> winkelwagenproductList = winkelwagenproductrepo.findByWinkelwagen(wwklant);
 
-		// Voor elk product halen we de meest recente prijs op en stoppen de product in
-		// de bestelling
+		Winkelwagen ww = klant.getWinkelwagen();
+		
+		List<WinkelwagenProduct> winkelwagenproductList = winkelwagenproductrepo.findByWinkelwagen(ww);
+		
+	
+		
 		if (!winkelwagenproductList.isEmpty()) {
 
-			Bestelling bestelling = new Bestelling();
-
-			// creeer bestellingproduct
-			BestellingProduct bestellingProduct = new BestellingProduct();
 			List<BestellingProduct> bestellingproducten = new ArrayList<BestellingProduct>();
 
-			// producten uit de winkelwagenproducten ophalen om zo de meest recente prijs te
-			// krijgen
 			for (WinkelwagenProduct winkelwagenProduct : winkelwagenproductList) {
 				Product product = winkelwagenProduct.getProduct();
-
-				// sla de hoeveelheid van het product in bestelling product
-				bestellingProduct.setHoeveelheid(winkelwagenProduct.getHoeveelheid());
-
-				// sla de productprijs op in bestelling product
-				bestellingProduct.setUnitCost(product.getKosten());
-
-				// Vermedigvuldig voor het totaal
-				bestellingProduct.setSubtotal(product.getKosten() * winkelwagenProduct.getHoeveelheid());
-
-				// Voed het gecreeerde bestellingsproduct toe aan een lijst.
-				bestellingproducten.add(bestellingProduct);
-
-				bestellingProduct.setBestelling(bestelling);
 				
+				BestellingProduct bestellingProduct = new BestellingProduct();
+				bestellingProduct.setProduct(product);
+				bestellingProduct.setHoeveelheid(winkelwagenProduct.getHoeveelheid());
+				bestellingProduct.setInkoop(product.getInkoop());
+				bestellingProduct.setKosten(product.getKosten());
+				bestellingproductrepo.save(bestellingProduct);
+				bestellingproducten.add(bestellingProduct);
 			}
-			// voeg de net gecreeerde lijst met bestellingproducten toe aan bestelling.
+			Bestelling bestelling = new Bestelling();
 			bestelling.setBestellingproducten(bestellingproducten);
-
 			bestelling.setDateCreated(LocalDateTime.now());
 			bestelling.setBestellingstatus(Bestellingstatus.CREATED);
 			bestelling.setKlant(klant);
+			for (BestellingProduct bestellingproduct : bestelling.getBestellingproducten()) {
+				bestellingproduct.setBestelling(bestelling);
+			}
 			bestellingrepo.save(bestelling);
+			
 			return new ResponseDTO(true);
 		}
 		return new ResponseDTO(false, "geen producten in winkelmand");

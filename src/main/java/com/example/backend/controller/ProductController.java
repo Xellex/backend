@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,12 +18,16 @@ import com.example.backend.model.Feestdagen;
 import com.example.backend.model.Product;
 import com.example.backend.model.ProductCategorie;
 import com.example.backend.repo.IProductRepository;
+import com.example.backend.service.AuthenticationService;
 
 @RestController
 public class ProductController {
 
 	@Autowired
 	private IProductRepository repo;
+	
+	@Autowired
+	private AuthenticationService authService;
 
 	@GetMapping("product/categorieen")
 	public List<String> getMyEnumValuesCategorieen() {
@@ -36,14 +41,16 @@ public class ProductController {
 	@GetMapping("product/feestdagen")
 	public List<String> getMyEnumValuesFeestdagen() {
 		List<String> feestdagNames = new ArrayList<>();
-		for (Feestdagen category : Feestdagen.values()) {
-			feestdagNames.add(category.name());
+		for (Feestdagen feestdag : Feestdagen.values()) {
+			feestdagNames.add(feestdag.name());
 		}
 		return feestdagNames;
 	}
 
 	@PostMapping(value = "product/toevoegen")
-	public ResponseDTO maakProductAann(@RequestBody ProductDTO product, MultipartFile image) {
+	public ResponseDTO maakProductAann(@RequestBody ProductDTO product, MultipartFile image, @RequestHeader("Authentication") String authenticationToken) {
+		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
+		if(!rights) return new ResponseDTO(false, "Nice try, hacker!");
 
 		ResponseDTO responseDTO = new ResponseDTO();
 		ArrayList<String> validaties = new ArrayList<>();

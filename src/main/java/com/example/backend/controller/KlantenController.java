@@ -1,6 +1,9 @@
 package com.example.backend.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.dto.AdminKlantDTO;
 import com.example.backend.dto.KlantDTO;
 import com.example.backend.dto.LoginResponseDTO;
+import com.example.backend.dto.ProductDTO;
 import com.example.backend.dto.ResponseDTO;
+import com.example.backend.dto.VerlanglijstProductDTO;
+import com.example.backend.dto.WinkelwagenProductDTO;
 import com.example.backend.model.Klant;
+import com.example.backend.model.Product;
 import com.example.backend.model.Token;
+import com.example.backend.model.VerlanglijstProduct;
 import com.example.backend.model.Winkelier;
+import com.example.backend.model.Winkelwagen;
+import com.example.backend.model.WinkelwagenProduct;
 import com.example.backend.repo.IKlantenRepository;
+import com.example.backend.repo.IProductRepository;
 import com.example.backend.repo.ITokenRepository;
+import com.example.backend.repo.IVerlanglijstProductRepository;
 import com.example.backend.repo.IWinkelierRepository;
 import com.example.backend.service.AuthenticationService;
 
@@ -34,10 +46,16 @@ public class KlantenController {
 	private IKlantenRepository klantRepo;
 
 	@Autowired
+	private IProductRepository productRepo;
+
+	@Autowired
 	private IWinkelierRepository winkelierRepo;
 
 	@Autowired
 	private ITokenRepository tokenRepo;
+
+	@Autowired
+	private IVerlanglijstProductRepository verlanglijstRepo;
 
 	@Autowired
 	private AuthenticationService authService;
@@ -58,8 +76,7 @@ public class KlantenController {
 		try {
 			klantRepo.save(klant);
 			return new ResponseDTO(true);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			ArrayList<String> errors = new ArrayList<String>();
 			errors.add(e.toString());
 			return new ResponseDTO(false, errors);
@@ -70,7 +87,7 @@ public class KlantenController {
 	public boolean klantById(@PathVariable int id, @RequestHeader("Authentication") String authenticationToken) {
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
 		if (rights) {
-			//Klant klant = klantRepo.findById(id).get();
+			// Klant klant = klantRepo.findById(id).get();
 			return true;
 		}
 		return false;
@@ -168,33 +185,83 @@ public class KlantenController {
 			return false;
 		}
 	}
-	
-	@GetMapping("klant/favorieten")
-	public ResponseDTO getMyVariableValues(@RequestHeader("Authentication") String authenticationToken) {
 
-//		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
-//		if (optionalToken.isEmpty())
-//			return new ResponseDTO(false, "No token");
-//
-//		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
-//		
-//		
-//		
-//		// klant uit token
-//		Klant klant = optionalToken.get().getKlant();
-//		Winkelwagen ww = klant.getWinkelwagen();
-//		List<WinkelwagenProduct> wwpddb = winkelwagenproductrepo.findByWinkelwagen(ww);
-//
-//		WinkelwagenDTO dto1 = new WinkelwagenDTO();
-//		for (WinkelwagenProduct wwpd : wwpddb) {
-//			ProductDTO p = new ProductDTO();
-//			Product i = wwpd.getProduct();
-//			p.setBeschrijving(i.getBeschrijving());
-//			p.setCategorie(i.getCategorie());
-//			p.setKosten(i.getKosten());
-//			p.setNaam(i.getNaam());
-//			dto1.addProduct(p, wwpd.getHoeveelheid());
-//		}
-		return new ResponseDTO(false);
+	@GetMapping("klant/favorieten")
+	public ArrayList<ProductDTO> getMyVariableValues(@RequestHeader("Authentication") String authenticationToken) {
+		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
+		Klant klant = optionalToken.get().getKlant();
+
+		List<VerlanglijstProduct> verlanglijstproducten = verlanglijstRepo.findByKlant(klant);
+		ArrayList<ProductDTO> producten = new ArrayList<ProductDTO>();
+		for (VerlanglijstProduct verlanglijstproduct : verlanglijstproducten) {
+			ProductDTO productDTO = new ProductDTO();
+			productDTO.setId(verlanglijstproduct.getProduct().getId());
+			productDTO.setBeschrijving(verlanglijstproduct.getProduct().getBeschrijving());
+			productDTO.setCategorie(verlanglijstproduct.getProduct().getCategorie());
+			productDTO.setFeestdag(verlanglijstproduct.getProduct().getFeestdag());
+			productDTO.setInkoop(verlanglijstproduct.getProduct().getInkoop());
+			productDTO.setKosten(verlanglijstproduct.getProduct().getKosten());
+			productDTO.setNaam(verlanglijstproduct.getProduct().getNaam());
+			productDTO.setVoorraad(verlanglijstproduct.getProduct().getVoorraad());
+			producten.add(productDTO);
+		}
+		return producten;
+	}
+
+	@PostMapping("klant/favoriet/toevoegen")
+	public ResponseDTO toevoegenFavoriet(@RequestBody VerlanglijstProductDTO dto,
+			@RequestHeader("Authentication") String authenticationToken) {
+		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
+		if (optionalToken.isEmpty())
+			return new ResponseDTO(false, "No token");
+
+		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
+		if (!rights)
+			return new ResponseDTO(false, "Geen rechten");
+
+		Klant klant = optionalToken.get().getKlant();
+
+		VerlanglijstProduct verlanglijstProduct = new VerlanglijstProduct();
+
+		verlanglijstProduct.setDatumToegevoegd(LocalDateTime.now());
+		verlanglijstProduct.setKlant(klant);
+		Product productdb = productRepo.findById(dto.getProductId()).orElse(null);
+		VerlanglijstProduct verlanglijstProductDB = verlanglijstRepo.findByProductAndKlant(productdb, klant)
+				.orElse(null);
+
+		if (productdb != null) {
+			if (verlanglijstProductDB != null)
+				return new ResponseDTO(false, "Product zit al in favorieten");
+			verlanglijstProduct.setProduct(productdb);
+			verlanglijstRepo.save(verlanglijstProduct);
+			return new ResponseDTO(true);
+		}
+		return new ResponseDTO(false, "product bestaat niet");
+	}
+
+	@PostMapping("klant/favoriet/verwijderen")
+	public ResponseDTO verwijderenFavoriet(@RequestBody VerlanglijstProductDTO dto,
+			@RequestHeader("Authentication") String authenticationToken) {
+		Optional<Token> optionalToken = authService.findByToken(authenticationToken);
+		if (optionalToken.isEmpty())
+			return new ResponseDTO(false, "No token");
+
+		boolean rights = authService.doesTokenHaveRole(authenticationToken, "KLANT");
+		if (!rights)
+			return new ResponseDTO(false, "Geen rechten");
+
+		Klant klant = optionalToken.get().getKlant();
+		Product productdb = productRepo.findById(dto.getProductId()).orElse(null);
+
+		if (productdb != null) {
+			VerlanglijstProduct verlanglijstProduct = verlanglijstRepo.findByProductAndKlant(productdb, klant)
+					.orElse(null);
+			if (verlanglijstProduct != null) {
+				verlanglijstRepo.delete(verlanglijstProduct);
+				return new ResponseDTO(true, "verlanglijstProduct bestaat niet");
+			}
+			return new ResponseDTO(false, "verlanglijstProduct bestaat niet");
+		}
+		return new ResponseDTO(false, "product bestaat niet");
 	}
 }

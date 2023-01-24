@@ -31,8 +31,8 @@ public class AuthenticationService {
 		Token token = tokenOptional.get();
 		
 		// Tijd checken
-		if (token.isExpired())
-			return false;
+//		if (token.isExpired())
+//			return false;
 		
 		return (expectedRole.equals(token.getRole()));
 	}

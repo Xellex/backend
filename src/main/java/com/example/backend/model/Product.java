@@ -19,6 +19,9 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@Column(nullable = true)
+	private String afbeelding;
+
 	@Column(nullable = false)
 	private String naam;
 
@@ -29,12 +32,12 @@ public class Product {
 	private int voorraad;
 
 	@Column(nullable = false)
-	@Enumerated (EnumType.STRING)
-	private ProductCategorie categorie;
-	
-	@Column(nullable = false)
-	@Enumerated (EnumType.STRING)
+	@Enumerated(EnumType.STRING)
 	private Feestdagen feestdag;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ProductCategorie categorie;
 
 	@Column(columnDefinition = "Decimal(10,2)", nullable = false)
 	private double kosten;
@@ -67,7 +70,7 @@ public class Product {
 	 * @param naam
 	 * @param beschrijving
 	 * @param voorraad
-	 * @param image
+	 * @param afbeelding
 	 * @param categorie
 	 * @param feestdag
 	 * @param kosten
@@ -102,6 +105,14 @@ public class Product {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getAfbeelding() {
+		return afbeelding;
+	}
+
+	public void setAfbeelding(String afbeelding) {
+		this.afbeelding = afbeelding;
 	}
 
 	public String getNaam() {
@@ -191,6 +202,4 @@ public class Product {
 	public void setFeestdag(Feestdagen feestdag) {
 		this.feestdag = feestdag;
 	}
-	
-
 }

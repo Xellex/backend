@@ -25,7 +25,7 @@ public class ProductController {
 
 	@Autowired
 	private IProductRepository repo;
-	
+
 	@Autowired
 	private AuthenticationService authService;
 
@@ -48,9 +48,12 @@ public class ProductController {
 	}
 
 	@PostMapping(value = "product/toevoegen")
-	public ResponseDTO maakProductAann(@RequestBody ProductDTO product, MultipartFile image, @RequestHeader("Authentication") String authenticationToken) {
+	public ResponseDTO maakProductAann(@RequestBody ProductDTO product, MultipartFile afbeelding,
+			@RequestHeader("Authentication") String authenticationToken) {
+
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
-		if(!rights) return new ResponseDTO(false, "Nice try, hacker!");
+		if (!rights)
+			return new ResponseDTO(false, "Nice try, hacker!");
 
 		ResponseDTO responseDTO = new ResponseDTO();
 		ArrayList<String> validaties = new ArrayList<>();
@@ -91,7 +94,7 @@ public class ProductController {
 		opslaanProduct.setKosten(product.getKosten());
 		opslaanProduct.setInkoop(product.getVoorraad());
 		opslaanProduct.setFeestdag(product.getFeestdag());
-		//opslaanProduct.setImage(product.getImage());
+		// opslaanProduct.setAfbeelding(product.getAfbeelding());
 		repo.save(opslaanProduct);
 
 		return responseDTO;
@@ -106,12 +109,13 @@ public class ProductController {
 		for (Product product : productenDB) {
 			ProductDTO productDTO = new ProductDTO();
 			productDTO.setId(product.getId());
+			productDTO.setAfbeelding(product.getAfbeelding());
 			productDTO.setNaam(product.getNaam());
 			productDTO.setBeschrijving(product.getBeschrijving());
-			productDTO.setVoorraad(product.getVoorraad());
-			productDTO.setCategorie(product.getCategorie());
-			productDTO.setKosten(product.getKosten());
 			productDTO.setFeestdag(product.getFeestdag());
+			productDTO.setCategorie(product.getCategorie());
+			productDTO.setVoorraad(product.getVoorraad());
+			productDTO.setKosten(product.getKosten());
 			productenDTOLijst.add(productDTO);
 		}
 		return productenDTOLijst;
@@ -124,10 +128,10 @@ public class ProductController {
 		productDto.setId(product.getId());
 		productDto.setNaam(product.getNaam());
 		productDto.setBeschrijving(product.getBeschrijving());
-		productDto.setVoorraad(product.getVoorraad());
+		productDto.setFeestdag(product.getFeestdag());
 		productDto.setCategorie(product.getCategorie());
+		productDto.setVoorraad(product.getVoorraad());
 		productDto.setKosten(product.getKosten());
 		return productDto;
 	}
-
 }

@@ -111,6 +111,7 @@ public class ProductController {
 			productDTO.setVoorraad(product.getVoorraad());
 			productDTO.setCategorie(product.getCategorie());
 			productDTO.setKosten(product.getKosten());
+			productDTO.setFeestdag(product.getFeestdag());
 			productenDTOLijst.add(productDTO);
 		}
 		return productenDTOLijst;

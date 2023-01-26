@@ -48,8 +48,10 @@ public class ProductController {
 	}
 
 	@PostMapping(value = "product/toevoegen")
+
 	public ResponseDTO maakProductAann(@RequestBody ProductDTO product, MultipartFile afbeelding,
 			@RequestHeader("Authentication") String authenticationToken) {
+
 
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
 		if (!rights)
@@ -94,7 +96,7 @@ public class ProductController {
 		opslaanProduct.setKosten(product.getKosten());
 		opslaanProduct.setInkoop(product.getVoorraad());
 		opslaanProduct.setFeestdag(product.getFeestdag());
-		// opslaanProduct.setAfbeelding(product.getAfbeelding());
+		//opslaanProduct.setAfbeelding(product.getAfbeelding());
 		repo.save(opslaanProduct);
 
 		return responseDTO;
@@ -134,4 +136,27 @@ public class ProductController {
 		productDto.setKosten(product.getKosten());
 		return productDto;
 	}
+
+	@GetMapping("producten/{category}")
+	public List<ProductDTO> getProductByCategory(@PathVariable String category) {
+		ProductCategorie productCategorie = ProductCategorie.valueOf(category);
+		List<Product> productenDB = repo.findAllByCategorie(productCategorie);
+		
+		List<ProductDTO> producten = new ArrayList<>();
+		
+		for (Product productendb : productenDB) {
+			ProductDTO productDto = new ProductDTO();
+			productDto.setBeschrijving(productendb.getBeschrijving());
+			productDto.setCategorie(productendb.getCategorie());
+			productDto.setId(productendb.getId());
+			productDto.setInkoop(productendb.getInkoop());
+			productDto.setKosten(productendb.getKosten());
+			productDto.setNaam(productendb.getNaam());
+			productDto.setVoorraad(productendb.getVoorraad());
+			productDto.setAfbeelding(productendb.getAfbeelding());
+			producten.add(productDto);
+		}
+		return producten;
+	}
+
 }

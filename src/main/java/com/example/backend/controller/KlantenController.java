@@ -22,14 +22,11 @@ import com.example.backend.dto.LoginResponseDTO;
 import com.example.backend.dto.ProductDTO;
 import com.example.backend.dto.ResponseDTO;
 import com.example.backend.dto.VerlanglijstProductDTO;
-import com.example.backend.dto.WinkelwagenProductDTO;
 import com.example.backend.model.Klant;
 import com.example.backend.model.Product;
 import com.example.backend.model.Token;
 import com.example.backend.model.VerlanglijstProduct;
 import com.example.backend.model.Winkelier;
-import com.example.backend.model.Winkelwagen;
-import com.example.backend.model.WinkelwagenProduct;
 import com.example.backend.repo.IKlantenRepository;
 import com.example.backend.repo.IProductRepository;
 import com.example.backend.repo.ITokenRepository;
@@ -203,6 +200,7 @@ public class KlantenController {
 			productDTO.setKosten(verlanglijstproduct.getProduct().getKosten());
 			productDTO.setNaam(verlanglijstproduct.getProduct().getNaam());
 			productDTO.setVoorraad(verlanglijstproduct.getProduct().getVoorraad());
+			productDTO.setAfbeelding(verlanglijstproduct.getProduct().getAfbeelding());
 			producten.add(productDTO);
 		}
 		return producten;

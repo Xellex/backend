@@ -14,6 +14,7 @@ public class ProductDTO {
 	private int voorraad;
 	private double kosten;
 	private double inkoop;
+	
 
 	public long getId() {
 		return id;

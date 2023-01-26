@@ -21,6 +21,9 @@ public class Product {
 
 	@Column(nullable = false)
 	private String naam;
+	
+	@Column(nullable = true)
+	private String afbeelding;
 
 	@Column(nullable = false)
 	private String beschrijving;
@@ -106,6 +109,14 @@ public class Product {
 
 	public String getNaam() {
 		return naam;
+	}
+
+	public String getAfbeelding() {
+		return afbeelding;
+	}
+
+	public void setAfbeelding(String afbeelding) {
+		this.afbeelding = afbeelding;
 	}
 
 	public void setNaam(String naam) {

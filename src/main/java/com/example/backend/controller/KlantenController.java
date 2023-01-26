@@ -203,6 +203,7 @@ public class KlantenController {
 			productDTO.setKosten(verlanglijstproduct.getProduct().getKosten());
 			productDTO.setNaam(verlanglijstproduct.getProduct().getNaam());
 			productDTO.setVoorraad(verlanglijstproduct.getProduct().getVoorraad());
+			productDTO.setAfbeelding(verlanglijstproduct.getProduct().getAfbeelding());
 			producten.add(productDTO);
 		}
 		return producten;

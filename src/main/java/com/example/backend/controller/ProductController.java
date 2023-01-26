@@ -25,7 +25,7 @@ public class ProductController {
 
 	@Autowired
 	private IProductRepository repo;
-	
+
 	@Autowired
 	private AuthenticationService authService;
 
@@ -48,9 +48,11 @@ public class ProductController {
 	}
 
 	@PostMapping(value = "product/toevoegen")
-	public ResponseDTO maakProductAann(@RequestBody ProductDTO product, MultipartFile image, @RequestHeader("Authentication") String authenticationToken) {
+	public ResponseDTO maakProductAann(@RequestBody ProductDTO product, MultipartFile image,
+			@RequestHeader("Authentication") String authenticationToken) {
 		boolean rights = authService.doesTokenHaveRole(authenticationToken, "WINKELIER");
-		if(!rights) return new ResponseDTO(false, "Nice try, hacker!");
+		if (!rights)
+			return new ResponseDTO(false, "Nice try, hacker!");
 
 		ResponseDTO responseDTO = new ResponseDTO();
 		ArrayList<String> validaties = new ArrayList<>();
@@ -91,7 +93,7 @@ public class ProductController {
 		opslaanProduct.setKosten(product.getKosten());
 		opslaanProduct.setInkoop(product.getVoorraad());
 		opslaanProduct.setFeestdag(product.getFeestdag());
-		//opslaanProduct.setImage(product.getImage());
+		// opslaanProduct.setImage(product.getImage());
 		repo.save(opslaanProduct);
 
 		return responseDTO;
@@ -112,6 +114,7 @@ public class ProductController {
 			productDTO.setCategorie(product.getCategorie());
 			productDTO.setKosten(product.getKosten());
 			productDTO.setFeestdag(product.getFeestdag());
+			productDTO.setAfbeelding(product.getAfbeelding());
 			productenDTOLijst.add(productDTO);
 		}
 		return productenDTOLijst;
@@ -128,6 +131,28 @@ public class ProductController {
 		productDto.setCategorie(product.getCategorie());
 		productDto.setKosten(product.getKosten());
 		return productDto;
+	}
+
+	@GetMapping("producten/{category}")
+	public List<ProductDTO> getProductByCategory(@PathVariable String category) {
+		ProductCategorie productCategorie = ProductCategorie.valueOf(category);
+		List<Product> productenDB = repo.findAllByCategorie(productCategorie);
+		
+		List<ProductDTO> producten = new ArrayList<>();
+		
+		for (Product productendb : productenDB) {
+			ProductDTO productDto = new ProductDTO();
+			productDto.setBeschrijving(productendb.getBeschrijving());
+			productDto.setCategorie(productendb.getCategorie());
+			productDto.setId(productendb.getId());
+			productDto.setInkoop(productendb.getInkoop());
+			productDto.setKosten(productendb.getKosten());
+			productDto.setNaam(productendb.getNaam());
+			productDto.setVoorraad(productendb.getVoorraad());
+			productDto.setAfbeelding(productendb.getAfbeelding());
+			producten.add(productDto);
+		}
+		return producten;
 	}
 
 }

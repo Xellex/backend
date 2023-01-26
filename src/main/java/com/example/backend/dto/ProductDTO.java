@@ -12,6 +12,16 @@ public class ProductDTO {
 	private int voorraad;
 	private double kosten;
 	private double inkoop;
+	private String afbeelding;
+	
+
+	public String getAfbeelding() {
+		return afbeelding;
+	}
+
+	public void setAfbeelding(String afbeelding) {
+		this.afbeelding = afbeelding;
+	}
 
 	public double getInkoop() {
 		return inkoop;
